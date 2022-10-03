@@ -1,19 +1,19 @@
 import './App.css';
-import Nav from './components/Nav';
-import { BrowserRouter as Router } from 'react-router-dom';
+import firebase from "firebase/compat/app";
+import 'firebase/compat/auth'
 
 function App() {
+  const GoogleLogin = () =>{
+    firebase.auth().signInWithRedirect(new firebase.auth.GoogleAuthProvider()).then(
+      (userCred)=>{
+        console.log(userCred);
+      });
+  };
+
   return (
-    <Router>
-      <div className="App">
-        <header className="App-header">
-          <Nav />
-          <p>
-            Bench
-          </p>
-        </header>
-      </div>
-    </Router>
+    <div className="App">
+        <button onClick={GoogleLogin}>Login with Google</button>
+    </div>
   );
 }
 
