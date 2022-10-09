@@ -6,10 +6,12 @@ import { useAuth } from '../context/AuthContext'
 const Login = () => {
   const router = useRouter()
   const { user, login } = useAuth()
+  //useState, when user setData, it tells react component to rerender the page
   const [data, setData] = useState({
     email: '',
     password: '',
   })
+  const [error, setError] = useState("")
 
   const handleLogin = async (e: any) => {
     e.preventDefault()
@@ -19,6 +21,7 @@ const Login = () => {
       await login(data.email, data.password)
       router.push('/dashboard')
     } catch (err) {
+      setError("Email address/Password Incorrect")
       console.log(err)
     }
   }
@@ -66,6 +69,7 @@ const Login = () => {
         <Button variant="primary" type="submit">
           Login
         </Button>
+        <Form.Label>{error}</Form.Label>
       </Form>
     </div>
   )
