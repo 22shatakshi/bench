@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext'
 import { useRouter } from 'next/router'
 
 const NavbarComp = () => {
-  const { user, logout } = useAuth()
+  const { user, logout, deleteAccount } = useAuth()
   const router = useRouter()
 
   return (
@@ -31,8 +31,12 @@ const NavbarComp = () => {
                       Something
                   </NavDropdown.Item>
                   <NavDropdown.Divider />
-                  <NavDropdown.Item href="/deleteAccount">
-                      Delete Account
+                  <NavDropdown.Item onClick={() => {
+                    deleteAccount()
+                    router.push('/login')
+                  }}
+                  >
+                    Delete Account
                   </NavDropdown.Item>
                 </NavDropdown>
                 <Nav.Link
