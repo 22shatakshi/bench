@@ -2,6 +2,9 @@ import React, { useState } from 'react'
 import { Button, Form } from 'react-bootstrap'
 import { useAuth } from '../context/AuthContext'
 import { useRouter } from 'next/router'
+import { database } from '../config/firebase'
+import { collection, addDoc } from "firebase/firestore"; 
+import { getAuth } from 'firebase/auth'
 
 const Signup = () => {
   const router = useRouter()
@@ -11,24 +14,44 @@ const Signup = () => {
     email: '',
     password: '',
   })
-  const [error, setError] = useState("")
+  const [msg, setMsg] = useState("")
 
   const handleSignup = async (e: any) => {
     e.preventDefault()
 
     try {
       if (data.password.length < 8 || data.password.length > 20) {
-        setError("Password needs to be 8-20 characters long.")
+        setMsg("Password needs to be 8-20 characters long.")
       }
       else {
         await signup(data.email, data.password)
+        const curUser = getAuth().currentUser
+        const userData = {
+          email: curUser?.email,
+          uid: curUser?.uid
+        }
+        try {
+          const docRef = await addDoc(collection(database, "userid"), {
+            email: userData.email,
+            uid: userData.uid,
+            username: "",
+            birthday: "",
+            first: "",
+            last: "",
+            address: "",
+            rating: 0,
+            gender: "",
+          })
+          console.log("Document written with ID: ", docRef.id)
+        } catch (e) {
+           console.log("Error adding document: ", e)
+        }
         router.push('/dashboard')
-      }
+        }
     } catch (err) {
-      setError("The Email is already in use. Please login or sign up with a different email.")
+      setMsg("The Email is already in use. Please login or sign up with a different email.")
       console.log(err)
     }
-
     console.log(data)
   }
 
@@ -77,7 +100,7 @@ const Signup = () => {
         <Button variant="primary" type="submit">
           Signup
         </Button>
-        <Form.Label>{error}</Form.Label>
+        <Form.Label>{msg}</Form.Label>
       </Form>
     </div>
   )
