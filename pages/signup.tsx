@@ -17,8 +17,13 @@ const Signup = () => {
     e.preventDefault()
 
     try {
-      await signup(data.email, data.password)
-      router.push('/dashboard')
+      if (data.password.length < 8 || data.password.length > 20) {
+        setError("Password needs to be 8-20 characters long.")
+      }
+      else {
+        await signup(data.email, data.password)
+        router.push('/dashboard')
+      }
     } catch (err) {
       setError("The Email is already in use. Please login or sign up with a different email.")
       console.log(err)
@@ -66,6 +71,7 @@ const Signup = () => {
             }
             value={data.password}
           />
+          
         </Form.Group>
 
         <Button variant="primary" type="submit">

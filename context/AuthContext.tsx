@@ -4,6 +4,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  deleteUser
 } from 'firebase/auth'
 import { auth } from '../config/firebase'
 
@@ -50,8 +51,20 @@ export const AuthContextProvider = ({
     await signOut(auth)
   }
 
+  const deleteAccount = async () => {
+    const user = auth.currentUser;
+    if (user) {
+      try {
+      await deleteUser(user)
+      setUser(null)
+      } catch (err) {
+        console.log(err)
+      }
+    }
+  }
+
   return (
-    <AuthContext.Provider value={{ user, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, login, signup, logout, deleteAccount }}>
       {loading ? null : children}
     </AuthContext.Provider>
   )
