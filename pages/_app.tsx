@@ -6,7 +6,7 @@ import { AuthContextProvider } from '../context/AuthContext'
 import { useRouter } from 'next/router'
 import ProtectedRoute from '../components/ProtectedRoute'
 
-const noAuthRequired = ['/', '/login', '/signup']
+const noAuthRequired = ['/', '/login', '/signup', '/forgotPassword']
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter()
@@ -26,4 +26,3 @@ function MyApp({ Component, pageProps }: AppProps) {
 }
 
 export default MyApp
-
