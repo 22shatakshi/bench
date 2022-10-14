@@ -1,6 +1,6 @@
 import React from 'react'
 import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap'
-import { DropdownSubmenu, NavDropdownMenu } from "react-bootstrap-submenu"; // install
+import { DropdownSubmenu } from "react-bootstrap-submenu"; // install
 import Link from 'next/link'
 import { useAuth } from '../context/AuthContext'
 import { useRouter } from 'next/router'
@@ -21,7 +21,7 @@ const NavbarComp = () => {
           <Nav className="me-auto">
             {user ? (
               <>
-                <Nav.Link href="/My Profile">My Profile</Nav.Link>
+                <Nav.Link href="/myProfile">My Profile</Nav.Link>
                 <NavDropdown title="Settings" id="collapseble submenu">
                   <DropdownSubmenu href="#action/2.1" title="Manage Account">
                     <NavDropdown.Item href="/updatePassword">
@@ -29,6 +29,9 @@ const NavbarComp = () => {
                     </NavDropdown.Item>
                     <NavDropdown.Item href="/updateEmail">
                         Update Email
+                    </NavDropdown.Item>
+                    <NavDropdown.Item href="/myProfile">
+                      Manage Profile
                     </NavDropdown.Item>
                     <NavDropdown.Divider />
                     <NavDropdown.Item onClick={() => {
