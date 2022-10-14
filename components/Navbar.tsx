@@ -1,8 +1,11 @@
 import React from 'react'
 import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap'
+import { DropdownSubmenu } from "react-bootstrap-submenu"; // install
 import Link from 'next/link'
 import { useAuth } from '../context/AuthContext'
 import { useRouter } from 'next/router'
+
+import "react-bootstrap-submenu/dist/index.css";
 
 const NavbarComp = () => {
   const { user, logout, deleteAccount } = useAuth()
@@ -19,25 +22,24 @@ const NavbarComp = () => {
           <Nav className="me-auto">
             {user ? (
               <>
-                <Nav.Link href="/My Profile">My Profile</Nav.Link>
-                <NavDropdown title="Manage Account" id="basic-nav-dropdown">
-                  <NavDropdown.Item href="/updatePassword">
+                <Nav.Link href="/myProfile">My Profile</Nav.Link>
+                <NavDropdown title="Settings" id="collapseble submenu">
+                  <DropdownSubmenu href="#action/2.1" title="Manage Account">
+                    <NavDropdown.Item href="/updatePassword">
                       Update Password
-                  </NavDropdown.Item>
-                  <NavDropdown.Item href="/updateEmail">
-                      Update Email
-                  </NavDropdown.Item>
-                  <NavDropdown.Item href="#action/3.3">
-                      Something
-                  </NavDropdown.Item>
-                  <NavDropdown.Divider />
-                  <NavDropdown.Item onClick={() => {
-                    deleteAccount()
-                    router.push('/login')
-                  }}
-                  >
-                    Delete Account
-                  </NavDropdown.Item>
+                    </NavDropdown.Item>
+                    <NavDropdown.Item href="/updateEmail">
+                        Update Email
+                    </NavDropdown.Item>
+                    <NavDropdown.Divider />
+                    <NavDropdown.Item onClick={() => {
+                      deleteAccount()
+                      router.push('/login')
+                    }}
+                    >
+                      Delete Account
+                    </NavDropdown.Item>
+                  </DropdownSubmenu>
                 </NavDropdown>
                 <Nav.Link
                   onClick={() => {
