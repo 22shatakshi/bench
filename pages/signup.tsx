@@ -47,17 +47,19 @@ const Signup = () => {
           uid: curUser?.uid
         }
         try {
-          const idDocRef = await addDoc(collection(database, "userid"), {
-            email: userData.email,
-            uid: userData.uid,
-            username: data.username,
-            birthday: "",
-            first: "",
-            last: "",
-            address: "",
-            rating: 0,
-            gender: "",
-          })
+          if (curUser) {
+            await setDoc(doc(database, "userid", curUser.uid), {
+              email: userData.email,
+              uid: userData.uid,
+              username: data.username,
+              birthday: "",
+              first: "",
+              last: "",
+              address: "",
+              rating: 0,
+              gender: "",
+            });
+          }
           await setDoc(doc(database, "username", data.username), {
             email: userData.email,
             uid: userData.uid,
@@ -69,7 +71,6 @@ const Signup = () => {
             rating: 0,
             gender: "",
           });
-          console.log("Document written with ID: ", idDocRef.id)
         } catch (e) {
            console.log("Error adding document: ", e)
         }
