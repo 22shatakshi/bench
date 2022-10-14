@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { Button, Form } from 'react-bootstrap'
@@ -70,6 +71,7 @@ const Login = () => {
           Login
         </Button>
         <Form.Label>{error}</Form.Label>
+        <Link href="/forgotPassword">Forgot Password/Username?</Link>
       </Form>
     </div>
   )

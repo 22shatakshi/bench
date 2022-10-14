@@ -4,6 +4,7 @@ import { DropdownSubmenu } from "react-bootstrap-submenu"; // install
 import Link from 'next/link'
 import { useAuth } from '../context/AuthContext'
 import { useRouter } from 'next/router'
+import "react-bootstrap-submenu/dist/index.css";
 
 import "react-bootstrap-submenu/dist/index.css";
 

@@ -5,6 +5,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
   deleteUser,
+  sendPasswordResetEmail
 } from 'firebase/auth'
 import { auth } from '../config/firebase'
 import { database } from '../config/firebase'
@@ -53,6 +54,10 @@ export const AuthContextProvider = ({
     await signOut(auth)
   }
 
+  const forgotpassword = (email: string) => {
+    return sendPasswordResetEmail(auth, email)
+  }
+
   const deleteAccount = async () => {
     const user = auth.currentUser;
     if (user) {
@@ -72,7 +77,7 @@ export const AuthContextProvider = ({
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, signup, logout, deleteAccount }}>
+    <AuthContext.Provider value={{ user, login, signup, logout, deleteAccount, forgotpassword }}>
       {loading ? null : children}
     </AuthContext.Provider>
   )
