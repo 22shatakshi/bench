@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Button, Form } from 'react-bootstrap'
 import { useRouter } from 'next/router'
 import { getAuth, updateEmail} from 'firebase/auth'
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc, getDoc, setDoc } from "firebase/firestore";
 import { database } from '../config/firebase';
 
 const setEmail = () => {
@@ -16,16 +16,23 @@ const setEmail = () => {
 
     const handleSetEmail = async (e: any) => {
         e.preventDefault()
-        var userEmailRef
+        var useridRef
+        var usernameRef
         if (user) {
-          userEmailRef = doc(database, "userid", user.uid)
+          useridRef = doc(database, "userid", user.uid)
+          const docSnap = await getDoc(useridRef)
+          let username : string = docSnap.get("username")
+          usernameRef = doc(database, "username", username)
         }
       
         try {
           if (user) {
             updateEmail(user, data.newEmail)
-            if (userEmailRef) {
-              await updateDoc(userEmailRef, {
+            if (useridRef && usernameRef) {
+              await updateDoc(useridRef, {
+                email: data.newEmail
+              });
+              await updateDoc(usernameRef, {
                 email: data.newEmail
               });
             } 
