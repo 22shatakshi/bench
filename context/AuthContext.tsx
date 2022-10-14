@@ -8,6 +8,8 @@ import {
   sendPasswordResetEmail
 } from 'firebase/auth'
 import { auth } from '../config/firebase'
+import { database } from '../config/firebase'
+import { doc, getDoc, deleteDoc } from "firebase/firestore"; 
 
 const AuthContext = createContext<any>({})
 
@@ -60,8 +62,14 @@ export const AuthContextProvider = ({
     const user = auth.currentUser;
     if (user) {
       try {
-      await deleteUser(user)
-      setUser(null)
+        const usersRef = doc(database, "userid", user.uid);
+        const docSnap = await getDoc(usersRef)
+        let username : string = docSnap.get("username")
+        console.log(username)
+        await deleteDoc(doc(database, "userid", user.uid))
+        await deleteDoc(doc(database, "username", username))
+        await deleteUser(user)
+        setUser(null)
       } catch (err) {
         console.log(err)
       }

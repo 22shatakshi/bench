@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import { Button, Form } from 'react-bootstrap'
 import { useRouter } from 'next/router'
-import { getAuth, updateEmail, EmailAuthProvider } from 'firebase/auth'
+import { getAuth, updateEmail} from 'firebase/auth'
+import { doc, updateDoc, getDoc, setDoc } from "firebase/firestore";
+import { database } from '../config/firebase';
 
 const setEmail = () => {
     const router = useRouter()
@@ -12,13 +14,28 @@ const setEmail = () => {
       })
     const [msg, setMsg] = useState("")
 
-
     const handleSetEmail = async (e: any) => {
         e.preventDefault()
-        
+        var useridRef
+        var usernameRef
+        if (user) {
+          useridRef = doc(database, "userid", user.uid)
+          const docSnap = await getDoc(useridRef)
+          let username : string = docSnap.get("username")
+          usernameRef = doc(database, "username", username)
+        }
+      
         try {
           if (user) {
             updateEmail(user, data.newEmail)
+            if (useridRef && usernameRef) {
+              await updateDoc(useridRef, {
+                email: data.newEmail
+              });
+              await updateDoc(usernameRef, {
+                email: data.newEmail
+              });
+            } 
             setMsg("Email updated")
           }    
         } catch (err) {

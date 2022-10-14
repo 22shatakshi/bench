@@ -6,6 +6,8 @@ import { useAuth } from '../context/AuthContext'
 import { useRouter } from 'next/router'
 import "react-bootstrap-submenu/dist/index.css";
 
+import "react-bootstrap-submenu/dist/index.css";
+
 const NavbarComp = () => {
   const { user, logout, deleteAccount } = useAuth()
   const router = useRouter()
@@ -29,9 +31,6 @@ const NavbarComp = () => {
                     </NavDropdown.Item>
                     <NavDropdown.Item href="/updateEmail">
                         Update Email
-                    </NavDropdown.Item>
-                    <NavDropdown.Item href="/myProfile">
-                      Manage Profile
                     </NavDropdown.Item>
                     <NavDropdown.Divider />
                     <NavDropdown.Item onClick={() => {
