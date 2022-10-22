@@ -23,6 +23,7 @@ const NavbarComp = () => {
           <Nav className="me-auto">
             {user ? (
               <>
+                <Nav.Link href="/dashboard">Explore</Nav.Link>
                 <Nav.Link href="/myProfile">My Profile</Nav.Link>
                 <NavDropdown title="Settings" id="collapseble submenu">
                   <DropdownSubmenu href="#action/2.1" title="Manage Account">
