@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import { getFirestore, doc, updateDoc } from "firebase/firestore";
 import { getAuth } from 'firebase/auth';
+import Container from 'react-bootstrap/Container';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 
 
 const db = getFirestore();
@@ -67,102 +70,103 @@ class Manage extends Component {
   // in react component itself as state
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
-        <div>
-          <label htmlFor='email'>Email</label>
-          <input
-            name='email'
-            placeholder='Email'
-            value={this.state.email}
-            onChange={this.handleChange}
-          />
-        </div>
-        <div>
-          <label htmlFor='name'>Name</label>
-          <input
-            name='name'
-            placeholder='Name'
-            value={this.state.name}
-            onChange={this.handleChange}
-          />
-        </div>
-        <div>
-          <label htmlFor='age'>Age</label>
-          <input
-            name='age'
-            placeholder='Age'
-            value={this.state.age}
-            onChange={this.handleChange}
-          />
-        </div>
-        <div>
-          <label htmlFor='address'>Address</label>
-          <input
-            name='address'
-            placeholder='Address'
-            value={this.state.address}
-            onChange={this.handleChange}
-          />
-        </div>
+      <div>
+        <Container>
+          <Form onSubmit={this.handleSubmit}>
 
-        <div>
-          <label>Stat</label>
-          <input
-            name='stat'
-            placeholder='stat'
-            value={this.state.stat}
-            onChange={this.handleChange}
-          />
-        </div>
+            <Form.Group controlId="form.Email">
+              <Form.Label>Email address</Form.Label>
+              <Form.Control type="email"
+                placeholder="name@example.com"
+                name='email'
+                value={this.state.email}
+                onChange={this.handleChange} />
+            </Form.Group>
 
-        <div>
-          <label>Gender</label>
-          <input
-            name='gender'
-            placeholder='gender'
-            value={this.state.gender}
-            onChange={this.handleChange}
-          />
-        </div>
+            <Form.Group controlId="form.Name">
+              <Form.Label>Name</Form.Label>
+              <Form.Control type="text"
+                placeholder="Enter name"
+                name='name'
+                value={this.state.name}
+                onChange={this.handleChange} />
+            </Form.Group>
 
-        <div>
-          <label>Social Media URL</label>
-          <input
-            name='link'
-            placeholder='link'
-            value={this.state.link}
-            onChange={this.handleChange}
-          />
-        </div>
+            <Form.Group controlId="form.Number">
+              <Form.Label>Age</Form.Label>
+              <Form.Control type="number"
+                name='age'
+                placeholder='Age'
+                value={this.state.age}
+                onChange={this.handleChange} />
+            </Form.Group>
 
-        {/* <div>
-          <label>Favorite Sport</label>
-          <input
-            name='sports'
-            placeholder='sport'
-            value={this.state.sports}
-            onChange={this.handleChange}
-          />
-        </div> */}
+            <Form.Group controlId="form.Select">
+              <Form.Label>Gender</Form.Label>
+              <Form.Select aria-label="Gender" name='gender'
+                placeholder='gender'
+                value={this.state.gender}
+                onChange={this.handleChange}>
+                <option value="prefer not to say">--Please select an option--</option>
+                <option value="female">Female</option>
+                <option value="male">Male</option>
+                <option value="other">Other</option>
+              </Form.Select>
+            </Form.Group>
 
-        <div>
-          <label for="sports">Favorite Sport</label>
-          <select id="sports" name='sports'
-            placeholder='sport'
-            value={this.state.sports}
-            onChange={this.handleChange}>
-            <option value="volleyball">Volleyball</option>
-            <option value="basketball">Basketball</option>
-            <option value="jogging">Jogging</option>
-            <option value="weightLifting">Weight Lifting</option>
-          </select></div>
+            <Form.Group controlId="form.Address">
+              <Form.Label>Address</Form.Label>
+              <Form.Control type="text"
+                name='address'
+                placeholder='Address'
+                value={this.state.address}
+                onChange={this.handleChange} />
+            </Form.Group>
 
-        <div>
-          <button>Save Changes</button>
-        </div>
+            <Form.Group controlId="form.Link">
+              <Form.Label>Social Media URL</Form.Label>
+              <Form.Control type="text"
+                name='link'
+                placeholder='Social Media link'
+                value={this.state.link}
+                onChange={this.handleChange} />
+            </Form.Group>
+
+            <Form.Group controlId="form.Select">
+              <Form.Label>Status</Form.Label>
+              <Form.Select aria-label="status" name='stat'
+                placeholder='stat'
+                value={this.state.stat}
+                onChange={this.handleChange}>
+                <option value="unknown">--Please select an option--</option>
+                <option value="female">Available</option>
+                <option value="male">Busy</option>
+              </Form.Select>
+            </Form.Group>
+
+            <Form.Group controlId="form.Select">
+              <Form.Label>Favorite Sport</Form.Label>
+              <Form.Select aria-label="Favorite Sport" name='sports'
+                placeholder='sport'
+                value={this.state.sports}
+                onChange={this.handleChange}>
+                <option value="Unknown">--Please select an option--</option>
+                <option value="Basketball">Basketball</option>
+                <option value="Volleyball">Volleyball</option>
+                <option value="Badminton">Badminton</option>
+                <option value="Jogging">Jogging</option>
+                <option value="Weight Lifting">Weight Lifting</option>
+                <option value="Swimming">Swimming</option>
+              </Form.Select>
+            </Form.Group>
+
+            <Button variant="success">Save Changes</Button>{' '}
+
+          </Form>
+        </Container>
 
 
-      </form>
+      </div >
     )
   }
 }
