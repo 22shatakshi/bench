@@ -34,7 +34,10 @@ const myProfile = () => {
         username: '',
         fullname: '',
         imageLink: '',
-        timestamp: ''
+        timestamp: '',
+        numOfRating: 0,
+        ratings: {},
+        averageRating: 5.0
       })
     const [loading, setLoading] = useState(true)
     useEffect(() => {
@@ -55,12 +58,20 @@ const myProfile = () => {
                 } catch(e) {
                     imageLink = getDownloadURL(ref(storage, 'xsFnrxqQXcPYe9NpEQW0A6wpl5Z2'))
                 }
+                var numOfRating = await docSnap.get("numOfRating")
+                var ratings = await docSnap.get("ratings")
+                var averageRating = 5.0
+                if (numOfRating != 0) {
+                  averageRating = ratings.reduce((a: any, b: any) => a + b, 0)
+                }
                 setData({
                     username: username,
                     email: email!,
                     fullname: fullName,
                     timestamp: lastSignInDate!,
-                    imageLink: imageLink
+                    imageLink: imageLink,
+                    numOfRating: numOfRating,
+                    averageRating: averageRating
                 })
                 console.log(email)
             }
@@ -195,6 +206,7 @@ const myProfile = () => {
                     <MDBCard className="mb-4 mb-md-0">
                     <MDBCardBody>
                         <MDBCardText className="mb-4">Average Rating</MDBCardText>
+                        <MDBCardText className="mb-4">{data.averageRating}</MDBCardText>
                         <MDBProgress className="rounded">
                         <MDBProgressBar width={89} valuemin={0} valuemax={100} />
                         </MDBProgress>
