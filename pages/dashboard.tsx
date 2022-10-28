@@ -1,14 +1,15 @@
 import React from 'react'
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBBtn, MDBTypography, MDBIcon } from 'mdb-react-ui-kit';
 import { collection, query, where, getDocs, orderBy, limit, doc, getDoc, getCountFromServer } from "firebase/firestore";
 import { database } from '../config/firebase';
 import { getAuth} from 'firebase/auth'
+import { useRouter } from 'next/router';
 
 
 const Dashboard = () => {
   const user = getAuth().currentUser
+  const router = useRouter()
   const [data, setData] = useState({
     user1: '',
     user2: '',
@@ -76,8 +77,8 @@ const Dashboard = () => {
                       <MDBIcon fab icon="skype" size="lg" />
                     </MDBBtn>
                   </div>
-                  <MDBBtn rounded size="lg">
-                    Message now
+                  <MDBBtn rounded size="lg" onClick={() => router.push('/users/' + data.user1)}>
+                    View Profile
                   </MDBBtn>
                   <div className="d-flex justify-content-between text-center mt-5 mb-2">
                     <div>
@@ -118,8 +119,8 @@ const Dashboard = () => {
                       <MDBIcon fab icon="skype" size="lg" />
                     </MDBBtn>
                   </div>
-                  <MDBBtn rounded size="lg">
-                    Message now
+                  <MDBBtn rounded size="lg" onClick={() => router.push('/users/' + data.user2)}>
+                    View Profile
                   </MDBBtn>
                   <div className="d-flex justify-content-between text-center mt-5 mb-2">
                     <div>
@@ -160,8 +161,8 @@ const Dashboard = () => {
                       <MDBIcon fab icon="skype" size="lg" />
                     </MDBBtn>
                   </div>
-                  <MDBBtn rounded size="lg">
-                    Message now
+                  <MDBBtn rounded size="lg" onClick={() => router.push('/users/' + data.user3)}>
+                    View Profile
                   </MDBBtn>
                   <div className="d-flex justify-content-between text-center mt-5 mb-2">
                     <div>
@@ -180,7 +181,11 @@ const Dashboard = () => {
                 </MDBCardBody>
               </MDBCard>
             </MDBCol>
+            <MDBBtn onClick={() => location.reload()}>
+                    Match Again
+            </MDBBtn>
           </MDBRow>)}
+          
       </MDBContainer>
     </div>
 
