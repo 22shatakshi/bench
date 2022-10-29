@@ -160,7 +160,7 @@ class Manage extends Component {
               </Form.Select>
             </Form.Group>
 
-            <Button variant="success">Save Changes</Button>{' '}
+            <Button>Save Changes</Button>
 
           </Form>
         </Container>
