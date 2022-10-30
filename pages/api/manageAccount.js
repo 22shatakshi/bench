@@ -25,10 +25,10 @@ class Manage extends Component {
       Name : ${name}
       Age : ${age}
       Address : ${address}
-      gender : ${gender}
-      status : ${stat}
-      link : ${link}
-      sports: ${sports}
+      Gender : ${gender}
+      Status : ${stat}
+      Link : ${link}
+      Sports: ${sports}
     `)
 
     const docRef = doc(db, "userid", a.currentUser?.uid);
@@ -128,8 +128,8 @@ class Manage extends Component {
                 value={this.state.stat}
                 onChange={this.handleChange}>
                 <option value="unknown">--Please select an option--</option>
-                <option value="female">Available</option>
-                <option value="male">Busy</option>
+                <option value="Available">Available</option>
+                <option value="Busy">Busy</option>
               </Form.Select>
             </Form.Group>
 
