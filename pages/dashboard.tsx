@@ -1,24 +1,23 @@
 import React from 'react'
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBBtn, MDBTypography, MDBIcon } from 'mdb-react-ui-kit';
 import { collection, query, where, getDocs, orderBy, limit, doc, getDoc, getCountFromServer } from "firebase/firestore";
 import { database } from '../config/firebase';
 import { getAuth} from 'firebase/auth'
-import useSWR from "swr";
+import { useRouter } from 'next/router';
+import CloseButton from 'react-bootstrap/CloseButton';
+
 
 
 const Dashboard = () => {
   const user = getAuth().currentUser
+  const router = useRouter()
   const [data, setData] = useState({
     user1: '',
     user2: '',
     user3: ''
   })
   const [loading, setLoading] = useState(true)
-
-  
-  const {error, mutate} = useSWR("https://miras-backend.herokuapp.com/random")
 
   useEffect(() => {
     // Get multiple documents from a collection
@@ -61,6 +60,7 @@ const Dashboard = () => {
             <MDBCol md="12" xl="4">
               <MDBCard style={{ borderRadius: '15px' }}>
                 <MDBCardBody className="text-center">
+                <CloseButton style={{ float: 'right' }}/>
                   <div className="mt-3 mb-4">
                     <MDBCardImage src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
                       className="rounded-circle" fluid style={{ width: '100px' }} />
@@ -80,7 +80,7 @@ const Dashboard = () => {
                       <MDBIcon fab icon="skype" size="lg" />
                     </MDBBtn>
                   </div>
-                  <MDBBtn rounded size="lg">
+                  <MDBBtn rounded size="lg" onClick={() => router.push('/users/' + data.user1)}>
                     View Profile
                   </MDBBtn>
                   <div className="d-flex justify-content-between text-center mt-5 mb-2">
@@ -103,6 +103,7 @@ const Dashboard = () => {
             <MDBCol md="12" xl="4">
               <MDBCard style={{ borderRadius: '15px' }}>
                 <MDBCardBody className="text-center">
+                <CloseButton style={{ float: 'right' }}/>
                   <div className="mt-3 mb-4">
                     <MDBCardImage src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
                       className="rounded-circle" fluid style={{ width: '100px' }} />
@@ -122,7 +123,7 @@ const Dashboard = () => {
                       <MDBIcon fab icon="skype" size="lg" />
                     </MDBBtn>
                   </div>
-                  <MDBBtn rounded size="lg">
+                  <MDBBtn rounded size="lg" onClick={() => router.push('/users/' + data.user2)}>
                     View Profile
                   </MDBBtn>
                   <div className="d-flex justify-content-between text-center mt-5 mb-2">
@@ -145,6 +146,7 @@ const Dashboard = () => {
             <MDBCol md="12" xl="4">
               <MDBCard style={{ borderRadius: '15px' }}>
                 <MDBCardBody className="text-center">
+                <CloseButton style={{ float: 'right' }}/>
                   <div className="mt-3 mb-4">
                     <MDBCardImage src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
                       className="rounded-circle" fluid style={{ width: '100px' }} />
@@ -164,7 +166,7 @@ const Dashboard = () => {
                       <MDBIcon fab icon="skype" size="lg" />
                     </MDBBtn>
                   </div>
-                  <MDBBtn rounded size="lg">
+                  <MDBBtn rounded size="lg" onClick={() => router.push('/users/' + data.user3)}>
                     View Profile
                   </MDBBtn>
                   <div className="d-flex justify-content-between text-center mt-5 mb-2">
@@ -184,7 +186,7 @@ const Dashboard = () => {
                 </MDBCardBody>
               </MDBCard>
             </MDBCol>
-            <MDBBtn rounded size="lg" onClick={()=> {location.reload()}}>
+            <MDBBtn onClick={() => location.reload()}>
                     Match Again
             </MDBBtn>
           </MDBRow>)}
