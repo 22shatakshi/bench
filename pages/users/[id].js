@@ -21,6 +21,7 @@ import {
   import { getAuth} from 'firebase/auth'
   import { useRouter } from 'next/router';
   import { getDownloadURL, getStorage, ref } from 'firebase/storage'
+import { style } from "@mui/system";
   
 export const getStaticPaths = async () => {
     let users = []
@@ -28,8 +29,10 @@ export const getStaticPaths = async () => {
     try {
         querySnapshot.forEach((doc) => {
             let data = doc.data()
+            console.log(data)
             
             users.push({
+                fullname: data.first + data.last,
                 uid: data.uid,
                 username: data.username,
                 email: data.email
@@ -80,10 +83,8 @@ const Profile = ({ user }) => {
     const router = useRouter()
     const data = deserializeDocumentSnapshot(user, getFirestore())
     return (
-        <div>
-            <h1>{ data.get("username")}</h1>
-            <h1>{ data.get("email")}</h1>
-            <MDBBtn onClick={() => router.push('/dashboard')}>Go back</MDBBtn>
+        <div style={{margin: '25px'}}>
+            
             <MDBRow>
             <MDBCol lg="4">
                 <MDBCard className="mb-4">
@@ -95,6 +96,7 @@ const Profile = ({ user }) => {
                     style={{ width: '150px' }}
                     fluid />
                     <p className="text-muted mb-1">{data.get("username")}</p>
+                  <p className="text-muted mb-4">{data.get("fullname")} </p>
                   <p className="text-muted mb-4">Status: </p>
                 </MDBCardBody>
                 <MDBCol className="text-center">
@@ -130,48 +132,7 @@ const Profile = ({ user }) => {
                 </MDBCardBody>
                 </MDBCard>
             </MDBCol>
-            <MDBCol lg="8">
-                <MDBCard className="mb-4">
-                <MDBCardBody>
-                <MDBRow>
-                    <MDBCol sm="3">
-                      <MDBCardText>Full Name</MDBCardText>
-                    </MDBCol>
-                    <MDBCol sm="9">
-                      <MDBCardText className="text-muted">{data.fullname}</MDBCardText>
-                    </MDBCol>
-                  </MDBRow>
-                  <hr />
-                  <MDBRow>
-                    <MDBCol sm="3">
-                      <MDBCardText>Email</MDBCardText>
-                    </MDBCol>
-                    <MDBCol sm="9">
-                      <MDBCardText className="text-muted">{data.email}</MDBCardText>
-                    </MDBCol>
-                  </MDBRow>
-                  <hr />
-                  <MDBRow>
-                  <MDBCol sm="3">
-                      <MDBCardText>Phone</MDBCardText>
-                    </MDBCol>
-                    <MDBCol sm="9">
-                        <MDBCardText className="text-muted">(123) 456-7890</MDBCardText>
-                    </MDBCol>
-                    
-                    </MDBRow>
-                    <hr />
-                    <MDBRow>
-                    <MDBCol sm="3">
-                        <MDBCardText>Address</MDBCardText>
-                    </MDBCol>
-                    <MDBCol sm="9">
-                        <MDBCardText className="text-muted">West Lafayette, IN 47906</MDBCardText>
-                    </MDBCol>
-                    </MDBRow>
-                </MDBCardBody>
-                </MDBCard>
-
+            <MDBCol>
                 <MDBRow>
                 <MDBCol md="6">
                     <MDBCard className="mb-4 mb-md-0">
@@ -221,8 +182,9 @@ const Profile = ({ user }) => {
                     </MDBCard>
                 </MDBCol>
                 </MDBRow>
-            </MDBCol>
+                </MDBCol>
             </MDBRow>
+            <MDBBtn style={{float: 'right'}} onClick={() => router.push('/dashboard') }>Go back</MDBBtn>
         </div>
     )
 }

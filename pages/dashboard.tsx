@@ -83,20 +83,6 @@ const Dashboard = () => {
                   <MDBBtn rounded size="lg" onClick={() => router.push('/users/' + data.user1)}>
                     View Profile
                   </MDBBtn>
-                  <div className="d-flex justify-content-between text-center mt-5 mb-2">
-                    <div>
-                      <MDBCardText className="mb-1 h5">8471</MDBCardText>
-                      <MDBCardText className="small text-muted mb-0">Rating</MDBCardText>
-                    </div>
-                    <div className="px-3">
-                      <MDBCardText className="mb-1 h5">8512</MDBCardText>
-                      <MDBCardText className="small text-muted mb-0">Reviews</MDBCardText>
-                    </div>
-                    <div>
-                      <MDBCardText className="mb-1 h5">4751</MDBCardText>
-                      <MDBCardText className="small text-muted mb-0">Friends</MDBCardText>
-                    </div>
-                  </div>
                 </MDBCardBody>
               </MDBCard>
             </MDBCol>
@@ -126,20 +112,6 @@ const Dashboard = () => {
                   <MDBBtn rounded size="lg" onClick={() => router.push('/users/' + data.user2)}>
                     View Profile
                   </MDBBtn>
-                  <div className="d-flex justify-content-between text-center mt-5 mb-2">
-                    <div>
-                      <MDBCardText className="mb-1 h5">8471</MDBCardText>
-                      <MDBCardText className="small text-muted mb-0">Rating</MDBCardText>
-                    </div>
-                    <div className="px-3">
-                      <MDBCardText className="mb-1 h5">8512</MDBCardText>
-                      <MDBCardText className="small text-muted mb-0">Reviews</MDBCardText>
-                    </div>
-                    <div>
-                      <MDBCardText className="mb-1 h5">4751</MDBCardText>
-                      <MDBCardText className="small text-muted mb-0">Friends</MDBCardText>
-                    </div>
-                  </div>
                 </MDBCardBody>
               </MDBCard>
             </MDBCol>
@@ -169,24 +141,10 @@ const Dashboard = () => {
                   <MDBBtn rounded size="lg" onClick={() => router.push('/users/' + data.user3)}>
                     View Profile
                   </MDBBtn>
-                  <div className="d-flex justify-content-between text-center mt-5 mb-2">
-                    <div>
-                      <MDBCardText className="mb-1 h5">8471</MDBCardText>
-                      <MDBCardText className="small text-muted mb-0">Rating</MDBCardText>
-                    </div>
-                    <div className="px-3">
-                      <MDBCardText className="mb-1 h5">8512</MDBCardText>
-                      <MDBCardText className="small text-muted mb-0">Reviews</MDBCardText>
-                    </div>
-                    <div>
-                      <MDBCardText className="mb-1 h5">4751</MDBCardText>
-                      <MDBCardText className="small text-muted mb-0">Friends</MDBCardText>
-                    </div>
-                  </div>
                 </MDBCardBody>
               </MDBCard>
             </MDBCol>
-            <MDBBtn onClick={() => location.reload()}>
+            <MDBBtn rounded size="lg" style={{width: '150px'}} onClick={() => location.reload()}>
                     Match Again
             </MDBBtn>
           </MDBRow>)}
@@ -198,4 +156,3 @@ const Dashboard = () => {
 }
 
 export default Dashboard
-
