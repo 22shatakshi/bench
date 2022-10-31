@@ -2,7 +2,7 @@ import { collection, getDoc, getDocs, doc, getFirestore } from "firebase/firesto
 import { database } from '../../config/firebase';
 import {serializeDocumentSnapshot, serializeQuerySnapshot, deserializeDocumentSnapshot, deserializeDocumentSnapshotArray} from "firestore-serializers";
 import {
-    
+    MDBCol,
     MDBContainer,
     MDBRow,
     MDBCard,
