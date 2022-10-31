@@ -20,19 +20,23 @@ import 'bootstrap-css-only/css/bootstrap.min.css';
 import { database } from '../config/firebase'
 import { getAuth} from 'firebase/auth'
 import { doc, getDoc } from "firebase/firestore";
+import { useRouter } from 'next/router';
+import { getDownloadURL, getStorage, ref } from 'firebase/storage'
 
 const myProfile = () => {
+    const router = useRouter()
     const auth = getAuth()
     const user = auth.currentUser
     var useridRef
     const [data, setData] = useState({
         email: '',
         username: '',
-        fullname: ''
+        fullname: '',
+        imagelink: '',
+        timestamp: ''
       })
     const [loading, setLoading] = useState(true)
     useEffect(() => {
-        // Update the document title using the browser API
         const getProfileData = async () => {
             if (user) {
                 useridRef = await doc(database, "userid", user.uid)
@@ -40,12 +44,22 @@ const myProfile = () => {
                 var username = await docSnap.get("username")
                 var firstName = await docSnap.get("first")
                 var lastName = await docSnap.get("last")
+                let lastSignInDate = user.metadata.lastSignInTime
                 var email = user.email
                 var fullName = firstName + " " + lastName
+                const storage = getStorage();
+                var imageLink
+                try {
+                imageLink = await getDownloadURL(ref(storage, String(user.uid)))
+                } catch(e) {
+                    imageLink = getDownloadURL(ref(storage, 'xsFnrxqQXcPYe9NpEQW0A6wpl5Z2'))
+                }
                 setData({
                     username: username,
-                    email: email,
-                    fullname: fullName
+                    email: email!,
+                    fullname: fullName,
+                    timestamp: lastSignInDate!,
+                    imagelink: imageLink
                 })
                 console.log(email)
             }
@@ -64,15 +78,16 @@ const myProfile = () => {
                 <MDBCard className="mb-4">
                 <MDBCardBody className="text-center">
                     <MDBCardImage
-                    src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
+                    src={data.imagelink}
                     alt="avatar"
                     className="rounded-circle"
                     style={{ width: '150px' }}
                     fluid />
                     <p className="text-muted mb-1">{data.username}</p>
                   <p className="text-muted mb-4">Status: </p>
+                  <p className="text-muted mb-4">Last Sign In Time: {data.timestamp} </p>
                 </MDBCardBody>
-                <MDBBtn style={{height: '36px', overflow: 'visible'}}>
+                <MDBBtn onClick={() => router.push('/editProfile')} style={{height: '36px', overflow: 'visible'}}>
                         Edit profile
                 </MDBBtn>
                 </MDBCard>
