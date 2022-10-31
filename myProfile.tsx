@@ -212,14 +212,18 @@ const myProfile = () => {
                         </MDBProgress>
                         <hr className="my-4" />
                         <MDBCardText className="mb-4">Reviews</MDBCardText>
-                        <MDBCardImage width="35" src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-2.webp" alt="avatar" className="rounded-circle me-1" />
-                        <MDBCard style="max-height: 100px; overflow-y: scroll">
-                          <MDBCardImage width="35" src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-2.webp" alt="avatar" className="rounded-circle me-1" />
-                          <MDBCardText>Account Name</MDBCardText>
-                          <MDBCardText>Rating</MDBCardText>
-                          <MDBCardText>Review</MDBCardText>
-                          <MDBCardText className="mt-4 mb-1" style={{ fontSize: '.77rem' }}>They are enthusaitic about volleyball and showed up on time. I had a lot of fun playing with them and I am surely looking foreard to more games with them. They are enthusaitic about volleyball and showed up on time. I had a lot of fun playing with them and I am surely looking foreard to more games with them. They are enthusaitic about volleyball and showed up on time. I had a lot of fun playing with them and I am surely looking foreard to more games with them. They are enthusaitic about volleyball and showed up on time. I had a lot of fun playing with them and I am surely looking foreard to more games with them. They are enthusaitic about volleyball and showed up on time. I had a lot of fun playing with them and I am surely looking foreard to more games with them. They are enthusaitic about volleyball and showed up on time. I had a lot of fun playing with them and I am surely looking foreard to more games with them. They are enthusaitic about volleyball and showed up on time. I had a lot of fun playing with them and I am surely looking foreard to more games with them. They are enthusaitic about volleyball and showed up on time. I had a lot of fun playing with them and I am surely looking foreard to more games with them.</MDBCardText>
-                        </MDBCard>
+                        <script type = "javascript">
+                            for (let i = 0; i < 5; i++) {
+                                <MDBCardImage width="35" src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-2.webp" alt="avatar" className="rounded-circle me-1" />
+                                <MDBCard style="max-height: 100px; overflow-y: scroll">
+                                  <MDBCardImage width="35" src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-2.webp" alt="avatar" className="rounded-circle me-1" />
+                                  <MDBCardText>Account Name</MDBCardText>
+                                  <MDBCardText>Rating</MDBCardText>
+                                  <MDBCardText>Review</MDBCardText>
+                                  <MDBCardText className="mt-4 mb-1" style={{ fontSize: '.77rem' }}>They are enthusaitic about volleyball and showed up on time. I had a lot of fun playing with them and I am surely looking foreard to more games with them. </MDBCardText>
+                                </MDBCard>
+                            }
+                        </script>
                     </MDBCardBody>
                     </MDBCard>
                 </MDBCol>
