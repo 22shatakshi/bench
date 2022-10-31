@@ -5,6 +5,8 @@ import { collection, query, where, getDocs, orderBy, limit, doc, getDoc, getCoun
 import { database } from '../config/firebase';
 import { getAuth} from 'firebase/auth'
 import { useRouter } from 'next/router';
+import CloseButton from 'react-bootstrap/CloseButton';
+
 
 
 const Dashboard = () => {
@@ -58,6 +60,7 @@ const Dashboard = () => {
             <MDBCol md="12" xl="4">
               <MDBCard style={{ borderRadius: '15px' }}>
                 <MDBCardBody className="text-center">
+                <CloseButton style={{ float: 'right' }}/>
                   <div className="mt-3 mb-4">
                     <MDBCardImage src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
                       className="rounded-circle" fluid style={{ width: '100px' }} />
@@ -100,6 +103,7 @@ const Dashboard = () => {
             <MDBCol md="12" xl="4">
               <MDBCard style={{ borderRadius: '15px' }}>
                 <MDBCardBody className="text-center">
+                <CloseButton style={{ float: 'right' }}/>
                   <div className="mt-3 mb-4">
                     <MDBCardImage src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
                       className="rounded-circle" fluid style={{ width: '100px' }} />
@@ -142,6 +146,7 @@ const Dashboard = () => {
             <MDBCol md="12" xl="4">
               <MDBCard style={{ borderRadius: '15px' }}>
                 <MDBCardBody className="text-center">
+                <CloseButton style={{ float: 'right' }}/>
                   <div className="mt-3 mb-4">
                     <MDBCardImage src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
                       className="rounded-circle" fluid style={{ width: '100px' }} />
@@ -193,3 +198,4 @@ const Dashboard = () => {
 }
 
 export default Dashboard
+
