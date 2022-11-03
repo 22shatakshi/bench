@@ -151,7 +151,7 @@ class Manage extends Component {
               <Form.Group controlId="form.Link">
                 <Form.Label>Instagram URL</Form.Label>
                 <Form.Control type="text"
-                  name='link'
+                  name='instagram'
                   placeholder='Instagram'
                   value={this.state.instagram}
                   onChange={this.handleChange} />
@@ -160,7 +160,7 @@ class Manage extends Component {
               <Form.Group controlId="form.Link">
                 <Form.Label>Twitter URL</Form.Label>
                 <Form.Control type="text"
-                  name='link'
+                  name='twitter'
                   placeholder='Twitter'
                   value={this.state.twitter}
                   onChange={this.handleChange} />
@@ -169,7 +169,7 @@ class Manage extends Component {
               <Form.Group controlId="form.Link">
                 <Form.Label>Facebook URL</Form.Label>
                 <Form.Control type="text"
-                  name='link'
+                  name='facebook'
                   placeholder='Facebook'
                   value={this.state.facebook}
                   onChange={this.handleChange} />
