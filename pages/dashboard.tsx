@@ -1,51 +1,74 @@
 import React from 'react'
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBBtn, MDBTypography, MDBIcon } from 'mdb-react-ui-kit';
-import { collection, query, where, getDocs, orderBy, limit, doc, getDoc, getCountFromServer } from "firebase/firestore";
+import { collection, query, where, getDocs, doc, getDoc, getCountFromServer, DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
 import { database } from '../config/firebase';
 import { getAuth} from 'firebase/auth'
+import { useRouter } from 'next/router';
+import CloseButton from 'react-bootstrap/CloseButton';
+
 
 
 const Dashboard = () => {
   const user = getAuth().currentUser
-  const [data, setData] = useState({
-    user1: '',
-    user2: '',
-    user3: ''
+  const router = useRouter()
+  const [iddata, setidData] = useState({
+    user1id: '',
+    user2id: '',
+    user3id: ''
+  })
+  const [username, setUsername] = useState({
+    user1name: '',
+    user2name: '',
+    user3name: ''
   })
   const [loading, setLoading] = useState(true)
+  const [user1, setUser1] = useState(false)
+  const [user2, setUser2] = useState(false)
+  const [user3, setUser3] = useState(false)
 
   useEffect(() => {
     // Get multiple documents from a collection
+    var qSize = 0;
+    var docSnapshots: QueryDocumentSnapshot<DocumentData>[] | { data: () => { (): any; new(): any; username: any; }; }[];
     const getUsers = async () => {
       const useridRef = await doc(database, "userid", user!.uid)
       const docSnap = await getDoc(useridRef)
       const sports = await docSnap.get("sports")
       const q = query(collection(database, "userid"), where("sports", "==", sports));
       const temp = await getCountFromServer(q)
-      const qSize = temp.data().count
-      var user1;
-      var user2;
-      var user3;
-      var userObtained = 0;
-      //might cause infinite loop here
-      while (userObtained != 3) {
-        var random = Math.floor(Math.random() * qSize);
-        
+      qSize = temp.data().count
+      let matchedlist = []
+      if (qSize < 3) {
+        //need to implement here
       }
-      const querySnapshot = await getDocs(q);
-
-      const docSnapshots = querySnapshot.docs;
-      setData({
-        user1: docSnapshots[0].data().username,
-        user2: docSnapshots[1].data().username,
-        user3: docSnapshots[2].data().username
-      })
+      else {
+        const querySnapshot = await getDocs(q);
+        docSnapshots = querySnapshot.docs;
+        var userObtained = 0;
+        while (userObtained != 3) {
+          var random = Math.floor(Math.random() * qSize);
+          var matched = docSnapshots[random].data()
+          if (matched.uid != user!.uid) {
+            matchedlist[userObtained++] = random
+          }
+        }
+        setidData({
+          user1id: docSnapshots[matchedlist[0]].data().uid,
+          user2id: docSnapshots[matchedlist[1]].data().uid,
+          user3id: docSnapshots[matchedlist[2]].data().uid
+        })
+        setUsername( {
+          user1name: docSnapshots[matchedlist[0]].data().username,
+          user2name: docSnapshots[matchedlist[1]].data().username,
+          user3name: docSnapshots[matchedlist[2]].data().username,
+        })
+      }
       setLoading(false)
     }
     getUsers()
-  }, [])
+  },[user1, user2, user3, loading])
+
 
   return (
     <div className="vh-100" style={{ backgroundColor: '#eee' }}>
@@ -57,11 +80,12 @@ const Dashboard = () => {
             <MDBCol md="12" xl="4">
               <MDBCard style={{ borderRadius: '15px' }}>
                 <MDBCardBody className="text-center">
+                <CloseButton style={{ float: 'right' }} onClick={() => setUser1(true)}/>
                   <div className="mt-3 mb-4">
                     <MDBCardImage src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
                       className="rounded-circle" fluid style={{ width: '100px' }} />
                   </div>
-                  <MDBTypography tag="h4">{data.user1}</MDBTypography>
+                  <MDBTypography tag="h4">{username.user1name}</MDBTypography>
                   <MDBCardText className="text-muted mb-4">
                     @Programmer <span className="mx-2">|</span> <a href="#!">mdbootstrap.com</a>
                   </MDBCardText>
@@ -76,8 +100,8 @@ const Dashboard = () => {
                       <MDBIcon fab icon="skype" size="lg" />
                     </MDBBtn>
                   </div>
-                  <MDBBtn rounded size="lg">
-                    Message now
+                  <MDBBtn rounded size="lg" onClick={() => router.push('/users/' + iddata.user1id)}>
+                    View Profile
                   </MDBBtn>
                   <div className="d-flex justify-content-between text-center mt-5 mb-2">
                     <div>
@@ -99,11 +123,12 @@ const Dashboard = () => {
             <MDBCol md="12" xl="4">
               <MDBCard style={{ borderRadius: '15px' }}>
                 <MDBCardBody className="text-center">
+                <CloseButton style={{ float: 'right' }}/>
                   <div className="mt-3 mb-4">
                     <MDBCardImage src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
                       className="rounded-circle" fluid style={{ width: '100px' }} />
                   </div>
-                  <MDBTypography tag="h4">{data.user2}</MDBTypography>
+                  <MDBTypography tag="h4">{username.user2name}</MDBTypography>
                   <MDBCardText className="text-muted mb-4">
                     @Programmer <span className="mx-2">|</span> <a href="#!">mdbootstrap.com</a>
                   </MDBCardText>
@@ -118,8 +143,8 @@ const Dashboard = () => {
                       <MDBIcon fab icon="skype" size="lg" />
                     </MDBBtn>
                   </div>
-                  <MDBBtn rounded size="lg">
-                    Message now
+                  <MDBBtn rounded size="lg" onClick={() => router.push('/users/' + iddata.user2id)}>
+                    View Profile
                   </MDBBtn>
                   <div className="d-flex justify-content-between text-center mt-5 mb-2">
                     <div>
@@ -141,11 +166,12 @@ const Dashboard = () => {
             <MDBCol md="12" xl="4">
               <MDBCard style={{ borderRadius: '15px' }}>
                 <MDBCardBody className="text-center">
+                <CloseButton style={{ float: 'right' }}/>
                   <div className="mt-3 mb-4">
                     <MDBCardImage src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
                       className="rounded-circle" fluid style={{ width: '100px' }} />
                   </div>
-                  <MDBTypography tag="h4">{data.user3}</MDBTypography>
+                  <MDBTypography tag="h4">{username.user3name}</MDBTypography>
                   <MDBCardText className="text-muted mb-4">
                     @Programmer <span className="mx-2">|</span> <a href="#!">mdbootstrap.com</a>
                   </MDBCardText>
@@ -160,8 +186,8 @@ const Dashboard = () => {
                       <MDBIcon fab icon="skype" size="lg" />
                     </MDBBtn>
                   </div>
-                  <MDBBtn rounded size="lg">
-                    Message now
+                  <MDBBtn rounded size="lg" onClick={() => router.push('/users/' + iddata.user3id)}>
+                    View Profile
                   </MDBBtn>
                   <div className="d-flex justify-content-between text-center mt-5 mb-2">
                     <div>
@@ -180,7 +206,11 @@ const Dashboard = () => {
                 </MDBCardBody>
               </MDBCard>
             </MDBCol>
+            <MDBBtn onClick={() => setLoading(true)}>
+                    Match Again
+            </MDBBtn>
           </MDBRow>)}
+          
       </MDBContainer>
     </div>
 

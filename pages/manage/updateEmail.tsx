@@ -3,10 +3,9 @@ import { Button, Form } from 'react-bootstrap'
 import { useRouter } from 'next/router'
 import { getAuth, updateEmail} from 'firebase/auth'
 import { doc, updateDoc, getDoc, setDoc } from "firebase/firestore";
-import { database } from '../config/firebase';
+import { database } from '../../config/firebase';
 
 const setEmail = () => {
-    const router = useRouter()
     const auth = getAuth();
     const user = auth.currentUser;
     const [data, setData] = useState({

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Button, Form } from 'react-bootstrap'
 import { useRouter } from 'next/router'
 import { getAuth, updatePassword, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth'
-import { useAuth } from '../context/AuthContext'
+import { useAuth } from '../../context/AuthContext'
 
 const reauthenticate = async (oldPassword: string) => {
   try {
@@ -29,7 +29,7 @@ const setPassword = () => {
     const [data, setData] = useState({
         oldPassword: '',
         newPassword: '',
-      })
+    })
     const [msg, setMsg] = useState("Once you change your password. You would have to relogin with your new credential")
 
 

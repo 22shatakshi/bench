@@ -6,7 +6,6 @@ import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 
 const Forgot = () => {
     const router = useRouter();
-    //const { user, forgotpassword } = useAuth()
     const [data, setData] = useState({
         email: '',
     })
@@ -17,7 +16,6 @@ const Forgot = () => {
         try {
             sendPasswordResetEmail(auth, data.email)
             router.push("/login")
-            //await forgotpassword(data.email)
         } catch (err) {
             setError("Error")
             console.log(err)

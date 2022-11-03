@@ -16,8 +16,7 @@ const Signup = () => {
     confirmPassword: '',
     username: '',
     dob: '',
-    first: '',
-    last: '',
+    name: ''
   })
   const [msg, setMsg] = useState("")
 
@@ -53,23 +52,15 @@ const Signup = () => {
               uid: userData.uid,
               username: data.username,
               birthday: "",
-              first: "",
-              last: "",
+              name: data.name,
               address: "",
               rating: 0,
               gender: "",
+              sports: "any"
             });
           }
           await setDoc(doc(database, "username", data.username), {
-            email: userData.email,
             uid: userData.uid,
-            username: data.username,
-            birthday: "",
-            first: "",
-            last: "",
-            address: "",
-            rating: 0,
-            gender: "",
           });
         } catch (e) {
            console.log("Error adding document: ", e)
@@ -121,6 +112,22 @@ const Signup = () => {
               })
             }
             value={data.username}
+          />
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="formBasicEmail">
+          <Form.Label>Displayed Name</Form.Label>
+          <Form.Control
+            type="username"
+            placeholder="Enter displayed name"
+            required
+            onChange={(e: any) =>
+              setData({
+                ...data,
+                name: e.target.value,
+              })
+            }
+            value={data.name}
           />
         </Form.Group>
 

@@ -1,5 +1,5 @@
-import Image from "./api/Image"
-import Manage from './api/manageAccount'
+import Image from "../api/Image"
+import Manage from '../api/manageAccount'
 import React from 'react'
 
 const editProfile = () => {
