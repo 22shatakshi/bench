@@ -1,5 +1,5 @@
-import Link from 'next/link'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 import React, { useState } from 'react'
 import { Button, Form } from 'react-bootstrap'
 import { useAuth } from '../context/AuthContext'
@@ -7,7 +7,7 @@ import { useAuth } from '../context/AuthContext'
 const Login = () => {
   const router = useRouter()
   const { user, login } = useAuth()
-  //useState, when user setData, it tells react component to rerender the page
+  //useState, when setData, it tells react component to rerender the page
   const [data, setData] = useState({
     email: '',
     password: '',

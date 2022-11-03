@@ -6,8 +6,6 @@ import { useAuth } from '../context/AuthContext'
 import { useRouter } from 'next/router'
 import "react-bootstrap-submenu/dist/index.css";
 
-import "react-bootstrap-submenu/dist/index.css";
-
 const NavbarComp = () => {
   const { user, logout, deleteAccount } = useAuth()
   const router = useRouter()
@@ -23,7 +21,8 @@ const NavbarComp = () => {
           <Nav className="me-auto">
             {user ? (
               <>
-                <Nav.Link href="/dashboard">Explore</Nav.Link>
+
+              <Nav.Link href="/dashboard">Explore</Nav.Link>
                 <Nav.Link href="/myProfile">My Profile</Nav.Link>
                 <NavDropdown title="Settings" id="collapseble submenu">
                   <DropdownSubmenu href="#action/2.1" title="Manage Account">

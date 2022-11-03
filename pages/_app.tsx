@@ -24,5 +24,4 @@ function MyApp({ Component, pageProps }: AppProps) {
     </AuthContextProvider>
   )
 }
-
 export default MyApp
