@@ -17,17 +17,15 @@ import {
 import { MDBIcon } from 'mdbreact';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap-css-only/css/bootstrap.min.css';
-import { database } from '../../config/firebase'
 import { getAuth} from 'firebase/auth'
-import { doc, getDoc } from "firebase/firestore";
 import { useRouter } from 'next/router';
 import { getDownloadURL, getStorage, ref } from 'firebase/storage'
+import currentUserDataRequest from '../../data/currectUser';
 
 const myProfile = () => {
     const router = useRouter()
     const auth = getAuth()
     const user = auth.currentUser
-    var useridRef
     const [data, setData] = useState({
         email: '',
         username: '',
@@ -35,36 +33,37 @@ const myProfile = () => {
         imagelink: '',
         timestamp: '',
         status: '',
+        instagram: '',
+        twitter: '',
+        facebook: '',
+        address: '',
+        rating: 0
       })
     const [loading, setLoading] = useState(true)
     useEffect(() => {
         const getProfileData = async () => {
-            if (user) {
-                useridRef = await doc(database, "userid", user.uid)
-                const docSnap = await getDoc(useridRef)
-                var username = await docSnap.get("username")
-                var name = await docSnap.get("name")
-                console.log(name)
-                var status = await docSnap.get("status")
-                let lastSignInDate = user.metadata.lastSignInTime
-                var email = user.email
-                const storage = getStorage();
-                var imageLink
-                try {
-                imageLink = await getDownloadURL(ref(storage, String(user.uid)))
-                } catch(e) {
-                    imageLink = getDownloadURL(ref(storage, 'xsFnrxqQXcPYe9NpEQW0A6wpl5Z2'))
-                }
-                setData({
-                    username: username,
-                    email: email!,
-                    name: name,
-                    status: status,
-                    timestamp: lastSignInDate!,
-                    imagelink: imageLink
-                })
-                console.log(email)
+            const userData = await currentUserDataRequest();
+            let lastSignInDate = user!.metadata.lastSignInTime
+            const storage = getStorage();
+            var imageLink
+            try {
+            imageLink = await getDownloadURL(ref(storage, String(user!.uid)))
+            } catch(e) {
+                imageLink = getDownloadURL(ref(storage, 'xsFnrxqQXcPYe9NpEQW0A6wpl5Z2'))
             }
+            setData({
+                username: userData.username,
+                email: userData.email,
+                name: userData.name,
+                status: userData.status,
+                timestamp: lastSignInDate!,
+                imagelink: imageLink,
+                instagram: userData.instagram,
+                twitter: userData.twitter,
+                facebook: userData.facebook,
+                address: userData.address,
+                rating: userData.rating * 20
+            })
             setLoading(false)
         }
         getProfileData()
@@ -98,20 +97,16 @@ const myProfile = () => {
                 <MDBCardBody className="p-0">
                     <MDBListGroup flush className="rounded-3">
                     <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
-                        <MDBIcon fas icon="globe fa-lg text-warning" />
-                        <MDBCardText><a href="https://github.com/22shatakshi/bench" style={{color: '#000000'}}>Website</a></MDBCardText>
-                    </MDBListGroupItem>
-                    <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
                         <MDBIcon fab icon="twitter fa-lg" style={{ color: '#55acee' }} />
-                        <MDBCardText><a href="https://github.com/22shatakshi/bench" style={{color: '#000000'}}>@shatakshi</a></MDBCardText>
+                        <MDBCardText><a href={data.twitter} style={{color: '#000000'}}>{data.twitter}</a></MDBCardText>
                     </MDBListGroupItem>
                     <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
                         <MDBIcon fab icon="instagram fa-lg" style={{ color: '#ac2bac' }} />
-                        <MDBCardText><a href="https://github.com/22shatakshi/bench" style={{color: '#000000'}}>@shatakshi</a></MDBCardText>
+                        <MDBCardText><a href={data.instagram} style={{color: '#000000'}}>{data.instagram}</a></MDBCardText>
                     </MDBListGroupItem>
                     <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
                         <MDBIcon fab icon="facebook fa-lg" style={{ color: '#3b5998' }} />
-                        <MDBCardText><a href="https://github.com/22shatakshi/bench" style={{color: '#000000'}}>@shatakshi</a></MDBCardText>
+                        <MDBCardText><a href={data.facebook} style={{color: '#000000'}}>{data.facebook}</a></MDBCardText>
                     </MDBListGroupItem>
                     </MDBListGroup>
                 </MDBCardBody>
@@ -136,24 +131,16 @@ const myProfile = () => {
                     <MDBCol sm="9">
                       <MDBCardText className="text-muted">{data.email}</MDBCardText>
                     </MDBCol>
-                  </MDBRow>
-                  <hr />
-                  <MDBRow>
-                  <MDBCol sm="3">
-                      <MDBCardText>Phone</MDBCardText>
-                    </MDBCol>
-                    <MDBCol sm="9">
-                        <MDBCardText className="text-muted">(123) 456-7890</MDBCardText>
-                    </MDBCol>
+
                     
                     </MDBRow>
                     <hr />
                     <MDBRow>
                     <MDBCol sm="3">
-                        <MDBCardText>Address</MDBCardText>
+                        <MDBCardText>Location</MDBCardText>
                     </MDBCol>
                     <MDBCol sm="9">
-                        <MDBCardText className="text-muted">West Lafayette, IN 47906</MDBCardText>
+                        <MDBCardText className="text-muted">{data.address}</MDBCardText>
                     </MDBCol>
                     </MDBRow>
                 </MDBCardBody>
@@ -198,7 +185,7 @@ const myProfile = () => {
                         <MDBCardText className="mb-4">Average Rating</MDBCardText>
                         
                         <MDBProgress className="rounded">
-                        <MDBProgressBar width={89} valuemin={0} valuemax={100} />
+                        <MDBProgressBar width={data.rating} valuemin={0} valuemax={100} />
                         </MDBProgress>
                         <hr className="my-4" />
                         <MDBCardText className="mb-4">Reviews</MDBCardText>
