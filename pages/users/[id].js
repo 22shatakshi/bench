@@ -22,6 +22,7 @@ export const getStaticPaths = async () => {
     //console.log("Users:", users)
     const paths = users.map((user) => ({
         params: {id: user.uid}
+
     }))
     return {
         paths,
