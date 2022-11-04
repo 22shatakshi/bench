@@ -22,6 +22,21 @@ const Dashboard = () => {
     user2name: '',
     user3name: ''
   })
+  const [name, setName] = useState({
+    name1: '',
+    name2: '',
+    name3: ''
+  })
+  const [rating, setRating] = useState({
+    rate1: '',
+    rate2: '',
+    rate3: ''
+  })
+  const [sports, setSports] = useState({
+    sport1: '',
+    sport2: '',
+    sport3: ''
+  })
   const [loading, setLoading] = useState(true)
   const [user1, setUser1] = useState(false)
   const [user2, setUser2] = useState(false)
@@ -63,6 +78,21 @@ const Dashboard = () => {
           user2name: docSnapshots[matchedlist[1]].data().username,
           user3name: docSnapshots[matchedlist[2]].data().username,
         })
+        setName({
+          name1: docSnapshots[matchedlist[0]].data().name,
+          name2: docSnapshots[matchedlist[1]].data().name,
+          name3: docSnapshots[matchedlist[2]].data().name
+        })
+        setRating({
+          rate1: docSnapshots[matchedlist[0]].data().rating,
+          rate2: docSnapshots[matchedlist[1]].data().rating,
+          rate3: docSnapshots[matchedlist[2]].data().rating
+        })
+        setSports({
+          sport1: docSnapshots[matchedlist[0]].data().sport1,
+          sport2: docSnapshots[matchedlist[0]].data().sport2,
+          sport3: docSnapshots[matchedlist[0]].data().sport3
+        })
       }
       docSnapshotsGlobal = docSnapshots
       setLoading(false)
@@ -93,6 +123,21 @@ const Dashboard = () => {
           user2id: iddata.user2id,
           user3id: iddata.user3id
         })
+        setName({
+          name1: docSnapshotsGlobal[random].data().name,
+          name2: name.name2,
+          name3: name.name3,
+        })
+        setRating({
+          rate1: docSnapshotsGlobal[random].data().rating,
+          rate2: rating.rate2,
+          rate3: rating.rate3,
+        })
+        setSports({
+          sport1: docSnapshotsGlobal[random].data().sport,
+          sport2: sports.sport2,
+          sport3: sports.sport3
+        })
         setUser1(false)
       }
       else if (user2) {
@@ -106,6 +151,21 @@ const Dashboard = () => {
           user2id: docSnapshotsGlobal[random].data().uid,
           user3id: iddata.user3id
         })
+        setName({
+          name1: name.name1,
+          name2: docSnapshotsGlobal[random].data().name,
+          name3: name.name3,
+        })
+        setRating({
+          rate1: rating.rate1,
+          rate2: docSnapshotsGlobal[random].data().rating,
+          rate3: rating.rate3,
+        })
+        setSports({
+          sport1: sports.sport1,
+          sport2: docSnapshotsGlobal[random].data().sport,
+          sport3: sports.sport3
+        })
         setUser2(false)
       }
       else {
@@ -118,6 +178,21 @@ const Dashboard = () => {
           user1id: iddata.user1id,
           user2id: iddata.user2id,
           user3id: docSnapshotsGlobal[random].data().uid,
+        })
+        setName({
+          name1: name.name1,
+          name2: name.name2,
+          name3: docSnapshotsGlobal[random].data().name,
+        })
+        setRating({
+          rate1: rating.rate1,
+          rate2: rating.rate2,
+          rate3: docSnapshotsGlobal[random].data().rating,
+        })
+        setSports({
+          sport1: sports.sport1,
+          sport2: sports.sport2,
+          sport3: docSnapshotsGlobal[random].data().sport,
         })
         setUser3(false)
       }   
@@ -153,34 +228,19 @@ const Dashboard = () => {
                   </div>
                   <MDBTypography tag="h4">{username.user1name}</MDBTypography>
                   <MDBCardText className="text-muted mb-4">
-                    @Programmer <span className="mx-2">|</span> <a href="#!">mdbootstrap.com</a>
+                    {name.name1}
                   </MDBCardText>
-                  <div className="mb-4 pb-2">
-                    <MDBBtn outline floating>
-                      <MDBIcon fab icon="facebook" size="lg" />
-                    </MDBBtn>
-                    <MDBBtn outline floating className="mx-1">
-                      <MDBIcon fab icon="twitter" size="lg" />
-                    </MDBBtn>
-                    <MDBBtn outline floating>
-                      <MDBIcon fab icon="skype" size="lg" />
-                    </MDBBtn>
-                  </div>
                   <MDBBtn rounded size="lg" onClick={() => router.push('/users/' + iddata.user1id)}>
                     View Profile
                   </MDBBtn>
                   <div className="d-flex justify-content-between text-center mt-5 mb-2">
                     <div>
-                      <MDBCardText className="mb-1 h5">8471</MDBCardText>
+                      <MDBCardText className="mb-1 h5">{rating.rate1}</MDBCardText>
                       <MDBCardText className="small text-muted mb-0">Rating</MDBCardText>
                     </div>
                     <div className="px-3">
-                      <MDBCardText className="mb-1 h5">8512</MDBCardText>
-                      <MDBCardText className="small text-muted mb-0">Reviews</MDBCardText>
-                    </div>
-                    <div>
-                      <MDBCardText className="mb-1 h5">4751</MDBCardText>
-                      <MDBCardText className="small text-muted mb-0">Friends</MDBCardText>
+                    <MDBCardText className="mb-1 h5">{sports.sport1}</MDBCardText>
+                      <MDBCardText className="small text-muted mb-0">Sports</MDBCardText>
                     </div>
                   </div>
                 </MDBCardBody>
@@ -196,34 +256,20 @@ const Dashboard = () => {
                   </div>
                   <MDBTypography tag="h4">{username.user2name}</MDBTypography>
                   <MDBCardText className="text-muted mb-4">
-                    @Programmer <span className="mx-2">|</span> <a href="#!">mdbootstrap.com</a>
+                    {name.name2}
                   </MDBCardText>
-                  <div className="mb-4 pb-2">
-                    <MDBBtn outline floating>
-                      <MDBIcon fab icon="facebook" size="lg" />
-                    </MDBBtn>
-                    <MDBBtn outline floating className="mx-1">
-                      <MDBIcon fab icon="twitter" size="lg" />
-                    </MDBBtn>
-                    <MDBBtn outline floating>
-                      <MDBIcon fab icon="skype" size="lg" />
-                    </MDBBtn>
-                  </div>
+                  
                   <MDBBtn rounded size="lg" onClick={() => router.push('/users/' + iddata.user2id)}>
                     View Profile
                   </MDBBtn>
                   <div className="d-flex justify-content-between text-center mt-5 mb-2">
                     <div>
-                      <MDBCardText className="mb-1 h5">8471</MDBCardText>
+                      <MDBCardText className="mb-1 h5">{rating.rate2}</MDBCardText>
                       <MDBCardText className="small text-muted mb-0">Rating</MDBCardText>
                     </div>
                     <div className="px-3">
-                      <MDBCardText className="mb-1 h5">8512</MDBCardText>
-                      <MDBCardText className="small text-muted mb-0">Reviews</MDBCardText>
-                    </div>
-                    <div>
-                      <MDBCardText className="mb-1 h5">4751</MDBCardText>
-                      <MDBCardText className="small text-muted mb-0">Friends</MDBCardText>
+                    <MDBCardText className="mb-1 h5">{sports.sport2}</MDBCardText>
+                      <MDBCardText className="small text-muted mb-0">Sports</MDBCardText>
                     </div>
                   </div>
                 </MDBCardBody>
@@ -239,40 +285,25 @@ const Dashboard = () => {
                   </div>
                   <MDBTypography tag="h4">{username.user3name}</MDBTypography>
                   <MDBCardText className="text-muted mb-4">
-                    @Programmer <span className="mx-2">|</span> <a href="#!">mdbootstrap.com</a>
+                    {name.name3}
                   </MDBCardText>
-                  <div className="mb-4 pb-2">
-                    <MDBBtn outline floating>
-                      <MDBIcon fab icon="facebook" size="lg" />
-                    </MDBBtn>
-                    <MDBBtn outline floating className="mx-1">
-                      <MDBIcon fab icon="twitter" size="lg" />
-                    </MDBBtn>
-                    <MDBBtn outline floating>
-                      <MDBIcon fab icon="skype" size="lg" />
-                    </MDBBtn>
-                  </div>
                   <MDBBtn rounded size="lg" onClick={() => router.push('/users/' + iddata.user3id)}>
                     View Profile
                   </MDBBtn>
                   <div className="d-flex justify-content-between text-center mt-5 mb-2">
                     <div>
-                      <MDBCardText className="mb-1 h5">8471</MDBCardText>
+                      <MDBCardText className="mb-1 h5">{rating.rate3}</MDBCardText>
                       <MDBCardText className="small text-muted mb-0">Rating</MDBCardText>
                     </div>
                     <div className="px-3">
-                      <MDBCardText className="mb-1 h5">8512</MDBCardText>
-                      <MDBCardText className="small text-muted mb-0">Reviews</MDBCardText>
-                    </div>
-                    <div>
-                      <MDBCardText className="mb-1 h5">4751</MDBCardText>
-                      <MDBCardText className="small text-muted mb-0">Friends</MDBCardText>
+                      <MDBCardText className="mb-1 h5">{sports.sport3}</MDBCardText>
+                      <MDBCardText className="small text-muted mb-0">Sports</MDBCardText>
                     </div>
                   </div>
                 </MDBCardBody>
               </MDBCard>
             </MDBCol>
-            <MDBBtn onClick={() => setLoading(true)}>
+            <MDBBtn style={{width: '175px'}} onClick={() => setLoading(true)}>
                     Match Again
             </MDBBtn>
           </MDBRow>)}
