@@ -7,8 +7,8 @@ import { getAuth} from 'firebase/auth'
 import { useRouter } from 'next/router';
 import CloseButton from 'react-bootstrap/CloseButton';
 
-
-
+var docSnapshotsGlobal: QueryDocumentSnapshot<DocumentData>[] | { data: () => { (): any; new(): any; username: any; }; }[];
+var remove: boolean
 const Dashboard = () => {
   const user = getAuth().currentUser
   const router = useRouter()
@@ -64,9 +64,60 @@ const Dashboard = () => {
           user3name: docSnapshots[matchedlist[2]].data().username,
         })
       }
+      docSnapshotsGlobal = docSnapshots
       setLoading(false)
+      remove = false
     }
-    getUsers()
+    const getNewUser = async () => {
+      remove = true
+      var userCount = 0;
+      var matched;
+      var random = 0;
+      qSize = docSnapshotsGlobal.length
+      
+      while (userCount == 0) {
+        random = Math.floor(Math.random() * qSize);
+        matched = docSnapshotsGlobal[random].data()
+        if (matched.uid != user!.uid) {
+          userCount++;
+        }
+      }
+      if (user1) {
+        setUsername({
+          user1name: docSnapshotsGlobal[random].data().username,
+          user2name: username.user2name,
+          user3name: username.user3name,
+        })
+        setUser1(false)
+      }
+      else if (user2) {
+        setUsername({
+          user1name: username.user1name,
+          user2name: docSnapshotsGlobal[random].data().username,
+          user3name: username.user3name,
+        })
+        setUser2(false)
+      }
+      else {
+        setUsername({
+          user1name: username.user1name,
+          user2name: username.user2name,
+          user3name: docSnapshotsGlobal[random].data().username,
+        })
+        setUser3(false)
+      }   
+    }
+    if((user1 || user2 || user3) && remove) {
+      getNewUser()
+    }
+    else {
+      if (!user1 && !user2 && !user3 && !remove) {
+        getUsers()
+      }       
+    }
+    if(!user1 && !user2 && !user3) {
+      remove = false
+    }
   },[user1, user2, user3, loading])
 
 
@@ -80,7 +131,7 @@ const Dashboard = () => {
             <MDBCol md="12" xl="4">
               <MDBCard style={{ borderRadius: '15px' }}>
                 <MDBCardBody className="text-center">
-                <CloseButton style={{ float: 'right' }} onClick={() => setUser1(true)}/>
+                <CloseButton style={{ float: 'right' }} onClick={() => {setUser1(true); remove = true;}}/>
                   <div className="mt-3 mb-4">
                     <MDBCardImage src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
                       className="rounded-circle" fluid style={{ width: '100px' }} />
@@ -123,7 +174,7 @@ const Dashboard = () => {
             <MDBCol md="12" xl="4">
               <MDBCard style={{ borderRadius: '15px' }}>
                 <MDBCardBody className="text-center">
-                <CloseButton style={{ float: 'right' }}/>
+                <CloseButton style={{ float: 'right' }} onClick={() => {setUser2(true); remove = true;}}/>
                   <div className="mt-3 mb-4">
                     <MDBCardImage src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
                       className="rounded-circle" fluid style={{ width: '100px' }} />
@@ -166,7 +217,7 @@ const Dashboard = () => {
             <MDBCol md="12" xl="4">
               <MDBCard style={{ borderRadius: '15px' }}>
                 <MDBCardBody className="text-center">
-                <CloseButton style={{ float: 'right' }}/>
+                <CloseButton style={{ float: 'right' }} onClick={() => {setUser3(true); remove = true;}}/>
                   <div className="mt-3 mb-4">
                     <MDBCardImage src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
                       className="rounded-circle" fluid style={{ width: '100px' }} />
