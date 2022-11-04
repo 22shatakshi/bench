@@ -16,9 +16,12 @@ import {
     MDBProgressBar,
     MDBListGroup,
     MDBListGroupItem,
-    MDBIcon,
     MDBBtn
   } from 'mdb-react-ui-kit';
+import { MDBIcon } from 'mdbreact';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+import 'bootstrap-css-only/css/bootstrap.min.css';
+
   import { useRouter } from "next/router";
 //npm install firestore-serializers
 
@@ -52,6 +55,7 @@ export const getStaticProps = async (context) => {
 const Profile = ({ user }) => {
     const router = useRouter()
     const data = deserializeDocumentSnapshot(user, getFirestore())
+    console.log("hello", data)
     const [loading, setLoading] = useState(true)
     const storage = getStorage();
     var imageLink
@@ -91,26 +95,22 @@ const Profile = ({ user }) => {
                                 </MDBCard>
 
                                 <MDBCard className="mb-4 mb-lg-0">
-                                    <MDBCardBody className="p-0">
-                                        <MDBListGroup flush className="rounded-3">
-                                            <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
-                                                <MDBIcon fas icon="globe fa-lg text-warning" />
-                                                <MDBCardText><a href="https://github.com/22shatakshi/bench" style={{ color: '#000000' }}>Website</a></MDBCardText>
-                                            </MDBListGroupItem>
-                                            <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
-                                                <MDBIcon fab icon="twitter fa-lg" style={{ color: '#55acee' }} />
-                                                <MDBCardText><a href="https://github.com/22shatakshi/bench" style={{ color: '#000000' }}>@shatakshi</a></MDBCardText>
-                                            </MDBListGroupItem>
-                                            <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
-                                                <MDBIcon fab icon="instagram fa-lg" style={{ color: '#ac2bac' }} />
-                                                <MDBCardText><a href="https://github.com/22shatakshi/bench" style={{ color: '#000000' }}>@shatakshi</a></MDBCardText>
-                                            </MDBListGroupItem>
-                                            <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
-                                                <MDBIcon fab icon="facebook fa-lg" style={{ color: '#3b5998' }} />
-                                                <MDBCardText><a href="https://github.com/22shatakshi/bench" style={{ color: '#000000' }}>@shatakshi</a></MDBCardText>
-                                            </MDBListGroupItem>
-                                        </MDBListGroup>
-                                    </MDBCardBody>
+                                <MDBCardBody className="p-0">
+                                    <MDBListGroup flush className="rounded-3">
+                                    <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
+                                        <MDBIcon fab icon="twitter fa-lg" style={{ color: '#55acee' }} />
+                                        <MDBCardText><a href={data.get("twitter")} style={{color: '#000000'}}>{data.get("twitter")}</a></MDBCardText>
+                                    </MDBListGroupItem>
+                                    <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
+                                        <MDBIcon fab icon="instagram fa-lg" style={{ color: '#ac2bac' }} />
+                                        <MDBCardText><a href={data.get("instagram")} style={{color: '#000000'}}>{data.get("instagram")}</a></MDBCardText>
+                                    </MDBListGroupItem>
+                                    <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
+                                        <MDBIcon fab icon="facebook fa-lg" style={{ color: '#3b5998' }} />
+                                        <MDBCardText><a href={data.get("facebook")} style={{color: '#000000'}}>{data.get("facebook")}</a></MDBCardText>
+                                    </MDBListGroupItem>
+                                    </MDBListGroup>
+                                </MDBCardBody>
                                 </MDBCard>
                             </MDBCol>
                             <MDBCol lg="8">
