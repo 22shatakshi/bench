@@ -61,6 +61,7 @@ const Signup = () => {
           }
           await setDoc(doc(database, "username", data.username), {
             uid: userData.uid,
+
           });
         } catch (e) {
            console.log("Error adding document: ", e)
@@ -114,7 +115,6 @@ const Signup = () => {
             value={data.username}
           />
         </Form.Group>
-
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Displayed Name</Form.Label>
           <Form.Control
@@ -130,7 +130,6 @@ const Signup = () => {
             value={data.name}
           />
         </Form.Group>
-
         <Form.Group className="mb-3" controlId="formBasicPassword">
           <Form.Label>Password</Form.Label>
           <Form.Control
@@ -173,5 +172,5 @@ const Signup = () => {
     </div>
   )
 }
-
 export default Signup
+
