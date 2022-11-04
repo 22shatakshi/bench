@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useId } from 'react'
 import { useEffect, useState } from 'react';
 import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBBtn, MDBTypography, MDBIcon } from 'mdb-react-ui-kit';
 import { collection, query, where, getDocs, doc, getDoc, getCountFromServer, DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
@@ -88,6 +88,11 @@ const Dashboard = () => {
           user2name: username.user2name,
           user3name: username.user3name,
         })
+        setidData({
+          user1id: docSnapshotsGlobal[random].data().uid,
+          user2id: iddata.user2id,
+          user3id: iddata.user3id
+        })
         setUser1(false)
       }
       else if (user2) {
@@ -96,6 +101,11 @@ const Dashboard = () => {
           user2name: docSnapshotsGlobal[random].data().username,
           user3name: username.user3name,
         })
+        setidData({
+          user1id: iddata.user1id,
+          user2id: docSnapshotsGlobal[random].data().uid,
+          user3id: iddata.user3id
+        })
         setUser2(false)
       }
       else {
@@ -103,6 +113,11 @@ const Dashboard = () => {
           user1name: username.user1name,
           user2name: username.user2name,
           user3name: docSnapshotsGlobal[random].data().username,
+        })
+        setidData({
+          user1id: iddata.user1id,
+          user2id: iddata.user2id,
+          user3id: docSnapshotsGlobal[random].data().uid,
         })
         setUser3(false)
       }   
