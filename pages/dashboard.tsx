@@ -50,7 +50,9 @@ const Dashboard = () => {
       const useridRef = await doc(database, "userid", user!.uid)
       const docSnap = await getDoc(useridRef)
       const sports = await docSnap.get("sports")
+      const blockUsernames = await docSnap.get("blockUsernames")
       const q = query(collection(database, "userid"), where("sports", "==", sports));
+      //const q = query(collection(database, "userid"), where("sports", "==", sports));
       const temp = await getCountFromServer(q)
       qSize = temp.data().count
       let matchedlist = []
@@ -64,6 +66,18 @@ const Dashboard = () => {
         while (userObtained != 3) {
           var random = Math.floor(Math.random() * qSize);
           var matched = docSnapshots[random].data()
+          var isBlock: boolean
+          isBlock = false
+          for (var i = 0; i < blockUsernames.length; i++) {
+            if (blockUsernames[i] == matched.username) {
+              isBlock = true
+              console.log("User " + matched.username + " just got blocked.");
+            }
+          }
+          if (isBlock) { // is in the block list
+            // replace matched with anther random user
+            continue
+          }
           if (matched.uid != user!.uid) {
             matchedlist[userObtained++] = random
           }
@@ -89,9 +103,9 @@ const Dashboard = () => {
           rate3: docSnapshots[matchedlist[2]].data().rating
         })
         setSports({
-          sport1: docSnapshots[matchedlist[0]].data().sport1,
-          sport2: docSnapshots[matchedlist[0]].data().sport2,
-          sport3: docSnapshots[matchedlist[0]].data().sport3
+          sport1: docSnapshots[matchedlist[0]].data().sports,
+          sport2: docSnapshots[matchedlist[0]].data().sports,
+          sport3: docSnapshots[matchedlist[0]].data().sports
         })
       }
       docSnapshotsGlobal = docSnapshots
@@ -134,7 +148,7 @@ const Dashboard = () => {
           rate3: rating.rate3,
         })
         setSports({
-          sport1: docSnapshotsGlobal[random].data().sport,
+          sport1: docSnapshotsGlobal[random].data().sports,
           sport2: sports.sport2,
           sport3: sports.sport3
         })
@@ -163,7 +177,7 @@ const Dashboard = () => {
         })
         setSports({
           sport1: sports.sport1,
-          sport2: docSnapshotsGlobal[random].data().sport,
+          sport2: docSnapshotsGlobal[random].data().sports,
           sport3: sports.sport3
         })
         setUser2(false)
@@ -192,7 +206,7 @@ const Dashboard = () => {
         setSports({
           sport1: sports.sport1,
           sport2: sports.sport2,
-          sport3: docSnapshotsGlobal[random].data().sport,
+          sport3: docSnapshotsGlobal[random].data().sports,
         })
         setUser3(false)
       }   
