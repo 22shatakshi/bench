@@ -15,7 +15,6 @@ const Signup = () => {
     password: '',
     confirmPassword: '',
     username: '',
-    dob: '',
     name: ''
   })
   const [msg, setMsg] = useState("")
@@ -52,16 +51,20 @@ const Signup = () => {
               uid: userData.uid,
               username: data.username,
               birthday: "",
+              age: "",
               name: data.name,
+              instagram: "Not Specified",
+              twitter: "Not Specified",
+              facebook: "Not Specified",
               address: "",
               rating: 0,
               gender: "",
-              sports: "any"
+              sports: "any",
+              blockUsernames: []
             });
           }
           await setDoc(doc(database, "username", data.username), {
             uid: userData.uid,
-
           });
         } catch (e) {
            console.log("Error adding document: ", e)
@@ -115,6 +118,7 @@ const Signup = () => {
             value={data.username}
           />
         </Form.Group>
+
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Displayed Name</Form.Label>
           <Form.Control
@@ -130,6 +134,7 @@ const Signup = () => {
             value={data.name}
           />
         </Form.Group>
+
         <Form.Group className="mb-3" controlId="formBasicPassword">
           <Form.Label>Password</Form.Label>
           <Form.Control
@@ -172,5 +177,5 @@ const Signup = () => {
     </div>
   )
 }
-export default Signup
 
+export default Signup
