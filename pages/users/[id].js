@@ -1,4 +1,3 @@
-import { collection, getDoc, getDocs, doc, getFirestore } from "firebase/firestore";
 import { database } from '../../config/firebase';
 import {serializeDocumentSnapshot, serializeQuerySnapshot, deserializeDocumentSnapshot, deserializeDocumentSnapshotArray} from "firestore-serializers";
 import userlistRequest from "../../data/userList"
@@ -22,8 +21,14 @@ import { MDBIcon } from 'mdbreact';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap-css-only/css/bootstrap.min.css';
 
-  import { useRouter } from "next/router";
+import { useRouter } from "next/router";
 //npm install firestore-serializers
+
+
+//--------------------------------Block----------------------------------------
+import { collection, getDoc, getDocs, doc, getFirestore, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
+import { getAuth } from 'firebase/auth'
+//-----------------------------------------------------------------------------
 
 export const getStaticPaths = async () => {
     let users = await userlistRequest()
@@ -50,7 +55,33 @@ export const getStaticProps = async (context) => {
     }
 }
 
+const handleBlock = async (event, username) => {
+    event.preventDefault()
+    // insert it in the current user's blockUsernames field,
+    const auth = getAuth()
+    const user = auth.currentUser
+    var useridRef = await doc(database, "userid", user.uid)
+    await updateDoc(useridRef, {
+        blockUsernames: arrayUnion(username)
+    });
 
+    alert(`The user ${username} is blocked successfully.\n
+    To unblock, please search for the user and go to their profile.`)
+}
+
+const handleUnblock = async (event, username) => {
+    event.preventDefault()
+    // remove it in the current user's blockUsernames field,
+    const auth = getAuth()
+    const user = auth.currentUser
+    var useridRef = await doc(database, "userid", user.uid)
+    await updateDoc(useridRef, {
+        blockUsernames: arrayRemove(username)
+    });
+
+    alert(`The user ${username} is unblocked successfully.\n`)
+}
+//------------------------------------------------------------------------------------------
 
 const Profile = ({ user }) => {
     const router = useRouter()
@@ -91,6 +122,12 @@ const Profile = ({ user }) => {
                                             fluid />
                                         <p className="text-muted mb-1">{data.get("username")}</p>
                                         <p className="text-muted mb-4">Status: {data.get("status")}</p>
+                                        <MDBBtn style={{ backgroundColor:'red', borderColor: "red"}} onClick={(event) => handleBlock(event, data.get("username"))}>
+                                                Block
+                                        </MDBBtn>
+                                        <MDBBtn onClick={(event) => handleUnblock(event, data.get("username"))}>
+                                                Unblock
+                                        </MDBBtn>
                                     </MDBCardBody>
                                 </MDBCard>
 
