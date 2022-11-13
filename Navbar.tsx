@@ -51,6 +51,11 @@ const NavbarComp = () => {
                     Requests
                   </NavDropdown.Item>
                 </NavDropdown>
+                <NavDropdown title="Notification" id="collapseble submenu">
+                  <NavDropdown.Item>
+                    notifications
+                  </NavDropdown.Item>
+                </NavDropdown>
                 <Nav.Link
                   onClick={() => {
                     logout()
