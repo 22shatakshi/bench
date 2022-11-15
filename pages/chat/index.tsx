@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -13,7 +13,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import Fab from '@material-ui/core/Fab';
 import SendIcon from '@material-ui/icons/Send';
-import { getAuth } from 'firebase/auth'
+import currentUserDataRequest from '../../data/currectUser';
+import userlistRequest from '../../data/userList';
 
 const useStyles = makeStyles({
   table: {
@@ -37,7 +38,22 @@ const useStyles = makeStyles({
 
 const Chat = () => {
   const classes = useStyles();
-  const user = getAuth().currentUser;
+  const [loading, setLoading] = useState(true);
+  const [userData, setUserData] = useState<any>(null);
+  const [userList, setUserList] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchData = async() => {
+        const data = await currentUserDataRequest();
+        setUserData(data);
+        const users = await userlistRequest();
+        setUserList(users);
+        setLoading(false);
+        console.log(userList)
+    }
+    fetchData();
+  }, [])
+
 
   return (
       <div>
@@ -46,14 +62,19 @@ const Chat = () => {
                 <Typography variant="h5" className="header-message">Chat</Typography>
             </Grid>
         </Grid>
+        <Grid container>
+        {loading ? (
+            <div> Loading </div>
+        ) : (
         <Grid container component={Paper} className={classes.chatSection}>
             <Grid item xs={3} className={classes.borderRight500}>
+                <>
                 <List>
-                    <ListItem button key="RemySharp">
+                    <ListItem button key="currentUser">
                         <ListItemIcon>
                         <Avatar alt="Remy Sharp" src="https://material-ui.com/static/images/avatar/1.jpg" />
                         </ListItemIcon>
-                        <ListItemText primary="John Wick"></ListItemText>
+                        <ListItemText primary={userData.name}></ListItemText>
                     </ListItem>
                 </List>
                 <Divider />
@@ -61,27 +82,26 @@ const Chat = () => {
                     <TextField id="outlined-basic-email" label="Search" variant="outlined" fullWidth />
                 </Grid>
                 <Divider />
+                <Paper style={{maxHeight: 430, overflow: 'auto'}}>
                 <List>
-                    <ListItem button key="RemySharp">
-                        <ListItemIcon>
-                            <Avatar alt="Remy Sharp" src="https://material-ui.com/static/images/avatar/1.jpg" />
-                        </ListItemIcon>
-                        <ListItemText primary="Remy Sharp">Remy Sharp</ListItemText>
-                        <ListItemText secondary="online" style={{float:"right"}}></ListItemText>
-                    </ListItem>
-                    <ListItem button key="Alice">
-                        <ListItemIcon>
-                            <Avatar alt="Alice" src="https://material-ui.com/static/images/avatar/3.jpg" />
-                        </ListItemIcon>
-                        <ListItemText primary="Alice">Alice</ListItemText>
-                    </ListItem>
-                    <ListItem button key="CindyBaker">
-                        <ListItemIcon>
-                            <Avatar alt="Cindy Baker" src="https://material-ui.com/static/images/avatar/2.jpg" />
-                        </ListItemIcon>
-                        <ListItemText primary="Cindy Baker">Cindy Baker</ListItemText>
-                    </ListItem>
+                <>
+                {userList?.length > 0 && userList?.map((user) => {
+                    if (user.uid != userData.uid) {
+                        return (
+                            <ListItem button key={user.uid}>
+                                <ListItemIcon>
+                                    <Avatar alt="Remy Sharp" src="https://material-ui.com/static/images/avatar/1.jpg" />
+                                </ListItemIcon>
+                                <ListItemText primary={user.name}>{user.name}</ListItemText>
+                                <ListItemText secondary="online" style={{float:"right"}}></ListItemText>
+                            </ListItem>
+                            )
+                        }
+                })}
+                </>
                 </List>
+                </Paper>
+                </>
             </Grid>
             <Grid item xs={9}>
                 <List className={classes.messageArea}>
@@ -126,6 +146,8 @@ const Chat = () => {
                     </Grid>
                 </Grid>
             </Grid>
+        </Grid>
+        )}
         </Grid>
       </div>
   );
