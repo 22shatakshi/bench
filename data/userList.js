@@ -24,12 +24,12 @@ import { collection, query, onSnapshot, getDocs } from "firebase/firestore";
 
 // export default userlistRequest;
 let state = 0;
-let users = []
 
 async function userlistRequest() {
     const q = query(collection(database, "userid"));
+    var users = []
     if (state) {
-        let users = []
+        users = []
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
         querySnapshot.forEach((doc) => {
           let data = doc.data()
@@ -38,8 +38,15 @@ async function userlistRequest() {
               username: data.username,
               email: data.email,
               name: data.name,
+              age: data.age,
+              status: data.status,
               sports: data.sports,
-              rating: data.rating
+              rating: data.rating,
+              address: data.address,
+              gender: data.gender,
+              instagram: data.instagram,
+              twitter: data.twitter,
+              facebook: data.facebook,
           }
           users.push(user)
           //console.log("userList.js", user)
@@ -53,6 +60,7 @@ async function userlistRequest() {
 } else {
     //initialization
     const querySnapshot = await getDocs(collection(database, "userid"));
+    users = []
     try {
         querySnapshot.forEach((doc) => {
             let data = doc.data()
@@ -61,8 +69,15 @@ async function userlistRequest() {
                 username: data.username,
                 email: data.email,
                 name: data.name,
+                age: data.age,
+                status: data.status,
                 sports: data.sports,
-                rating: data.rating
+                rating: data.rating,
+                address: data.address,
+                gender: data.gender,
+                instagram: data.instagram,
+                twitter: data.twitter,
+                facebook: data.facebook,
             })
         })
         state = 1;
