@@ -15,6 +15,8 @@ import Fab from '@material-ui/core/Fab';
 import SendIcon from '@material-ui/icons/Send';
 import currentUserDataRequest from '../../data/currectUser';
 import userlistRequest from '../../data/userList';
+import { getDoc, doc, setDoc, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { database } from '../../config/firebase'
 
 const useStyles = makeStyles({
   table: {
@@ -39,13 +41,17 @@ const useStyles = makeStyles({
 const Chat = () => {
   const classes = useStyles();
   const [loading, setLoading] = useState(true);
-  const [userData, setUserData] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<any>(null);
   const [userList, setUserList] = useState<any[]>([]);
+  const [chatTarget, setChatTarget] = useState<any>(null);
+  const [text, setText] = useState("");
+  const [error, setError] = useState("")
+  const [target, setTarget] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchData = async() => {
         const data = await currentUserDataRequest();
-        setUserData(data);
+        setCurrentUser(data);
         const users = await userlistRequest();
         setUserList(users);
         setLoading(false);
@@ -53,6 +59,57 @@ const Chat = () => {
     }
     fetchData();
   }, [])
+
+  const handleSearch = () => {
+    const targetUsers = userList?.filter(u => u?.username === text || u?.name === text);
+    if (targetUsers.length == 0) {
+        setTarget([]);
+        setError("No user found");
+    }
+    else {
+        setTarget(targetUsers)
+        setError("");
+    }
+    console.log(targetUsers)
+  }
+
+  const handleKeyDown = (e: any) => {
+    e.code === "Enter" && handleSearch();
+  }
+
+//   const handleSelect = async (user: any) => {
+//     //check whether the group exists or not in firestore
+//     setTarget(user);
+//     const combinedId = userData.uid > user.uid
+//     ? userData.uid + user.uid
+//     : user.uid + userData.uid;
+//     try {
+//         const res = await getDoc(doc(database, "chats", combinedId));
+//         //if does not exist, create chats
+//         if (!res.exists()) {
+//             await setDoc(doc(database, "chats", combinedId), { messages: [] });
+//         }
+//         await updateDoc(doc(database, "userChats", userData.uid), {
+//             [combinedId + ".userInfo"]: {
+//               uid: user.uid,
+//               displayName: user.name,
+//               //photoURL: user.photoURL,
+//             },
+//             [combinedId + ".date"]: serverTimestamp(),
+//           });
+  
+//           await updateDoc(doc(database, "userChats", user.uid), {
+//             [combinedId + ".userInfo"]: {
+//               uid: userData.uid,
+//               displayName: userData.name,
+//               //photoURL: currentUser.photoURL,
+//             },
+//             [combinedId + ".date"]: serverTimestamp(),
+//           });
+//     } catch (err) {
+//         console.log(err);
+//     }
+//   }
 
 
   return (
@@ -74,26 +131,39 @@ const Chat = () => {
                         <ListItemIcon>
                         <Avatar alt="Remy Sharp" src="https://material-ui.com/static/images/avatar/1.jpg" />
                         </ListItemIcon>
-                        <ListItemText primary={userData.name}></ListItemText>
+                        <ListItemText primary={currentUser.name}></ListItemText>
                     </ListItem>
                 </List>
                 <Divider />
                 <Grid item xs={12} style={{padding: '10px'}}>
-                    <TextField id="outlined-basic-email" label="Search" variant="outlined" fullWidth />
+                    <TextField id="outlined-basic-email" label="Search" variant="outlined" fullWidth value={text} onKeyDown={handleKeyDown} onChange={e=>setText(e.target.value)}/>
+                    <div> {error} </div>
+                    <>
+                    {target?.length > 0 && target?.map((result) => {
+                    return (
+                        <ListItem button>
+                        <ListItemIcon>
+                            <Avatar alt="Remy Sharp" src="https://material-ui.com/static/images/avatar/1.jpg" />
+                        </ListItemIcon>
+                        <ListItemText primary={result.name}>{result.name}</ListItemText>
+                        <ListItemText secondary={result.status} style={{float:"right"}}></ListItemText>
+                        </ListItem>
+                    )})}  
+                    </>          
                 </Grid>
                 <Divider />
                 <Paper style={{maxHeight: 430, overflow: 'auto'}}>
-                <List>
+                <List >
                 <>
                 {userList?.length > 0 && userList?.map((user) => {
-                    if (user.uid != userData.uid) {
+                    if (user.uid != currentUser.uid) {
                         return (
                             <ListItem button key={user.uid}>
                                 <ListItemIcon>
                                     <Avatar alt="Remy Sharp" src="https://material-ui.com/static/images/avatar/1.jpg" />
                                 </ListItemIcon>
                                 <ListItemText primary={user.name}>{user.name}</ListItemText>
-                                <ListItemText secondary="online" style={{float:"right"}}></ListItemText>
+                                <ListItemText secondary={user.status} style={{float:"right"}}></ListItemText>
                             </ListItem>
                             )
                         }
