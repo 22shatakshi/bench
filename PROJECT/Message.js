@@ -44,8 +44,24 @@ const Message = () => {
     }
     return (
         <div>
-
+            <div class="textarea-container" align="center">
+                <form class="send-message-form" method="post" enctype="multipart/form-data">
+                    <textarea class="message-textarea auto-grow-input" name="text" placeholder="<?php echo $lang['write_a_message_label']; ?>..." onkeyup="SK_sendMessageForm(event);" onfocus="SK_sendMessageForm(event);" data-height="22" disabled></textarea>
+                    <input class="message-photo-input hidden" name="photos[]" type="file" accept="image/jpeg,image/png" onchange="SK_uploadMessageForm();">
+                        <div class="options-wrapper">
+                            <i class="icon-camera progress-icon cursor-hand" title="<?php echo $lang['upload_photo']; ?>" valign="middle" onclick="$('.message-photo-input').click();"></i>
+                        </div>
+                        <input name="timeline_id" value="<?php echo $sk['user']['id']; ?>" type="hidden">
+                            <input id="recipient-id" name="recipient_id" value="0" type="hidden" />
+                        </form>
+                    </div>
+            </div >
+            <input class="message-photo-input hidden" name="photos[]" type="file" accept="image/jpeg,image/png" onchange="SK_uploadMessageForm();">
+                <div class="options-wrapper" style="float:left ; margin-top:5px">
+                    <i class="icon-camera progress-icon cursor-hand" title="<?php echo $lang['upload_photo']; ?>" valign="middle" onclick="$('.message-photo-input').click();"></i>
+                </div>
         </div>
+
     )
 }
 
