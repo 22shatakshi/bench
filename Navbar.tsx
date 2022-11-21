@@ -1,15 +1,22 @@
 import React from 'react'
 import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap'
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 import { DropdownSubmenu } from "react-bootstrap-submenu"; // install
 import Link from 'next/link'
 import { useAuth } from '../context/AuthContext'
 import { useRouter } from 'next/router'
+import { List , ListItem, ListItemAvatar, ListItemText } from '@mui/material';
 
 import "react-bootstrap-submenu/dist/index.css";
 
 const NavbarComp = () => {
   const { user, logout, deleteAccount } = useAuth()
   const router = useRouter()
+
+  const handleSearch =async (e:any) => {
+    e.preventDefault()
+  }
 
   return (
     <Navbar bg="light" expand="lg">
@@ -23,47 +30,53 @@ const NavbarComp = () => {
             {user ? (
               <>
               <Nav.Link href="/dashboard">Explore</Nav.Link>
-                <Nav.Link href="/profile/myProfile">My Profile</Nav.Link>
-                <Nav.Link href="/myEvent">My Event</Nav.Link>
-                <NavDropdown title="Settings" id="collapseble submenu">
-                  <DropdownSubmenu href="#action/2.1" title="Manage Account">
-                    <NavDropdown.Item href="/updatePassword">
+              <Nav.Link href="/profile/myProfile">My Profile</Nav.Link>
+              <Nav.Link href="/event/myEvent">My Event</Nav.Link>
+              <Nav.Link href="/chat">Chat</Nav.Link>
+              <Nav.Link href="/search">Search</Nav.Link>
+              <NavDropdown title="Settings" id="collapseble submenu">
+                <DropdownSubmenu title="Manage Account">
+                  <NavDropdown.Item href="/manage/updatePassword">
                       Update Password
-                    </NavDropdown.Item>
-                    <NavDropdown.Item href="/updateEmail">
-                        Update Email
-                    </NavDropdown.Item>
-                    <NavDropdown.Divider />
-                    <NavDropdown.Item onClick={() => {
+                  </NavDropdown.Item>
+                  <NavDropdown.Item href="/manage/updateEmail">
+                      Update Email
+                  </NavDropdown.Item>
+                  <NavDropdown.Divider />
+                  <NavDropdown.Item onClick={() => {
                       deleteAccount()
                       router.push('/login')
-                    }}
-                    >
+                  }}>
                       Delete Account
-                    </NavDropdown.Item>
-                  </DropdownSubmenu>
-                </NavDropdown>
-                <NavDropdown title="Chats" id="collapseble submenu">
-                  <NavDropdown.Item href="/messages">
-                    Messages
                   </NavDropdown.Item>
-                  <NavDropdown.Item href="/requests">
-                    Requests
-                  </NavDropdown.Item>
-                </NavDropdown>
-                <NavDropdown title="Notification" id="collapseble submenu">
-                  <NavDropdown.Item>
-                    notifications
-                  </NavDropdown.Item>
-                </NavDropdown>
-                <Nav.Link
+                </DropdownSubmenu>
+              </NavDropdown>
+              <NavDropdown title="Notification" id="collapseble submenu">
+                <NavDropdown.Item>
+                  <List className="todo__list"> 
+                    <ListItem>
+                      <ListItemAvatar />
+                      <ListItemText primary={} secondary={} />
+                    </ListItem>
+                  </List> 
+                </NavDropdown.Item>
+              </NavDropdown>
+              <Nav.Link
                   onClick={() => {
                     logout()
                     router.push('/login')
-                  }}
-                >
+                  }}>
                   Logout
-                </Nav.Link>
+              </Nav.Link>
+                <Form className="d-flex" onSubmit={handleSearch}>
+                <Form.Control
+                  type="search"
+                  placeholder="Search"
+                  className="me-2"
+                  aria-label="Search"
+                />
+                <Button variant="outline-success">Search</Button>
+                </Form>
               </>                  
             ) : (
               <>
