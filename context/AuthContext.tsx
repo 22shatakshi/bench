@@ -9,6 +9,7 @@ import {
 import { auth } from '../config/firebase'
 import { database } from '../config/firebase'
 import { doc, getDoc, deleteDoc } from "firebase/firestore"; 
+import currentUserDataRequest from '../data/currectUser';
 
 const AuthContext = createContext<any>({})
 
@@ -21,16 +22,12 @@ export const AuthContextProvider = ({
 }) => {
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
-  console.log(user)
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async(user) => {
       if (user) {
-        setUser({
-          uid: user.uid,
-          email: user.email,
-          displayName: user.displayName,
-        })
+        setUser(await currentUserDataRequest())
+        console.log(user)
       } else {
         setUser(null)
       }
