@@ -12,7 +12,7 @@ import { database } from '../../../config/firebase';
 import { useAuth } from '../../../context/AuthContext';
 import { getDoc, doc, setDoc, updateDoc, } from 'firebase/firestore';
 import { ChatContext } from '../../../context/ChatContext';
-
+import Paper from '@material-ui/core/Paper';
 
 const useStyles = makeStyles({
   table: {
@@ -97,7 +97,6 @@ const Search = () => {
 
     return (
         <div>
-            <Grid item xs={12} style={{padding: '10px'}}>
                     <TextField id="outlined-basic-email" label="Search" variant="outlined" fullWidth value={text} onKeyDown={handleKey} onChange={e=>setText(e.target.value)}/>
                     <div> {err} </div>
                     <>
@@ -112,7 +111,6 @@ const Search = () => {
                         </ListItem>
                     )})}  
                 </>          
-            </Grid> 
         </div>
     )
 }

@@ -45,10 +45,8 @@ const Sidebar = () => {
                 <ListItemText primary={user.displayName}></ListItemText>
             </ListItem>
         </List>
-      <Grid container component={Paper} className={classes.chatSection}>
         <Search/>
         <ChatList/>
-      </Grid>
     </div>
   );
 };
