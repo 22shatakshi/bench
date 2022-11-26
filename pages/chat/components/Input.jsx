@@ -6,7 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import Fab from '@material-ui/core/Fab';
 import SendIcon from '@material-ui/icons/Send';
 import { database, storage } from "../../../config/firebase"
-import { ref, uploadBytesResumable, getDownloadURL, uploadBytes } from "firebase/storage";
+import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import ImageIcon from '@mui/icons-material/Image';
 import { v4 as uuid } from "uuid";
 import {  doc, updateDoc, arrayUnion, Timestamp, serverTimestamp } from 'firebase/firestore';
@@ -19,13 +19,15 @@ const Input = () => {
     
 
     const handleSend = async () => {
+        const msgId = uuid();
         if (file) {
             const storageRef = ref(storage, uuid());
             uploadBytes(storageRef, file).then(() => {
                 getDownloadURL(storageRef).then( async (downloadURL) => {
+                    console.log(downloadURL);
                     await updateDoc(doc(database, "chats", data.chatId), {
                         messages: arrayUnion({
-                            id: uuid(),
+                            id: msgId,
                             text,
                             senderId: user.uid,
                             timestamp: Timestamp.now(),
@@ -48,28 +50,8 @@ const Input = () => {
                     });
                 })
             })
-            // const uploadTask = uploadBytesResumable(storageRef, file);
-            // uploadTask.on(
-            //     (error) => {
-            //         console.log(error);
-            //       },
-            //       () => {
-            //         getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-            //           await updateDoc(doc(database, "chats", data.chatId), {
-            //             messages: arrayUnion({
-            //               id: uuid(),
-            //               text,
-            //               senderId: user.uid,
-            //               timestamp: Timestamp.now(),
-            //               file: downloadURL,
-            //             }),
-            //           });
-            //         });
-            //     }
-            // );
         } else {
             try {
-                const msgId = uuid();
                 await updateDoc(doc(database, "chats", data.chatId), {
                     messages: arrayUnion({
                         id: msgId,
