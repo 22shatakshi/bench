@@ -1,5 +1,8 @@
 import React, { useContext } from 'react';
 import { ChatContext } from '../../../context/ChatContext';
+import { database } from "../../../config/firebase"
+import { doc, updateDoc, deleteField } from "firebase/firestore";
+import { useAuth } from '../../../context/AuthContext';
 import AppBar from '@mui/material/AppBar';
 import Avatar from '@mui/material/Avatar';
 import Toolbar from '@mui/material/Toolbar';
@@ -13,6 +16,7 @@ import Box from '@mui/material/Box';
 
 const Appbar = () => {
     const { data } = useContext(ChatContext);
+    const { user } = useAuth();
 
     const [anchorEl, setAnchorEl] = React.useState(null);
   
@@ -23,6 +27,12 @@ const Appbar = () => {
     const handleClose = () => {
       setAnchorEl(null);
     };
+
+    const handleClear = async () => {
+        await updateDoc(doc(database, 'chats', data.chatId), {
+            [user.uid]: []
+        })
+    }
 
     return (
         <div>
@@ -60,7 +70,7 @@ const Appbar = () => {
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                     {data.user?.displayName}
                     </Typography>
-                    <Button color="inherit">Clear Chat</Button>
+                    <Button color="inherit" onClick={handleClear}>Clear Chat</Button>
                     </Toolbar>
                 </AppBar>
                 </Box>
