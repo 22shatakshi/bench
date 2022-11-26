@@ -12,30 +12,8 @@ import { database } from '../../../config/firebase';
 import { useAuth } from '../../../context/AuthContext';
 import { getDoc, doc, setDoc, updateDoc, } from 'firebase/firestore';
 import { ChatContext } from '../../../context/ChatContext';
-import Paper from '@material-ui/core/Paper';
-
-const useStyles = makeStyles({
-  table: {
-    minWidth: 650,
-  },
-  chatSection: {
-    width: '100%',
-    height: '80vh'
-  },
-  headBG: {
-      backgroundColor: '#e0e0e0'
-  },
-  borderRight500: {
-      borderRight: '1px solid #e0e0e0'
-  },
-  messageArea: {
-    height: '70vh',
-    overflowY: 'auto'
-  }
-});
 
 const Search = () => {
-    const classes = useStyles();
     const [err, setErr] = useState("");
     const [text, setText] = useState("");
     const [displayList, setDisplayList] = useState([]);
@@ -68,11 +46,12 @@ const Search = () => {
         const res = await getDoc(doc(database, "chats", combinedId));
         try {
             if (!res.exists()) {
-                console.log("create new chat")
                 //create user chats
                 await setDoc(doc(database, "chats", combinedId), {
                     id: combinedId,
                     messages: [],
+                    [user.uid]: [],
+                    [selected.uid]: [],
                 });
                 await updateDoc(doc(database, "chatInfo", user.uid), {
                     [combinedId + ".userInfo"]: {
