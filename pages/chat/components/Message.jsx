@@ -10,12 +10,12 @@ import Grid from '@material-ui/core/Grid';
 const useStyles = makeStyles({
     imageOwner: {
       width: 200,
-      height: 150,
+      height: "auto",
       float: "right",
     },
     notOwner: {
       width: 200,
-      height: 150,
+      height: "auto",
       float: "left",
     }
 });
