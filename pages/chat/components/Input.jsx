@@ -31,6 +31,20 @@ const Input = () => {
                             timestamp: Timestamp.now(),
                             file: downloadURL,
                         }),
+                        [user.uid]: arrayUnion({
+                            id: msgId,
+                            sender: user.uid,
+                            text,
+                            file: downloadURL,
+                            timestamp: Timestamp.now(),
+                        }),
+                        [data.payloadId]: arrayUnion({
+                            id: msgId,
+                            sender: user.uid,
+                            text,
+                            file: downloadURL,
+                            timestamp: Timestamp.now(),
+                        })
                     });
                 })
             })
