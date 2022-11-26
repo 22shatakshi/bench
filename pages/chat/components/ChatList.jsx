@@ -28,14 +28,6 @@ const ChatList = () => {
             }
         }
 
-        // const fetchList = async () => {
-        //     //fetch all the conversations
-        //     const list = await userlistRequest(); 
-        //     setChatList(list);
-        //     console.log(userList)
-        //     setLoading(false);
-        // }
-        // fetchList();
         user.uid && getChatList();
         console.log(Object.entries(chatList));
     }, [user.uid])
@@ -52,7 +44,7 @@ const ChatList = () => {
             <Paper style={{maxHeight: 430, overflow: 'auto'}}>
             <List >
             <>
-            {Object.entries(chatList)?.map((chat) => {
+            {Object.entries(chatList)?.sort((a,b)=>b[1].timestamp - a[1].timestamp).map((chat) => {
                 return (
                     <ListItem button key={chat[0]} onClick={() => handleSelect(chat[1].userInfo)}>
                         <ListItemIcon>
