@@ -11,12 +11,12 @@ const useStyles = makeStyles({
     imageOwner: {
       width: 200,
       height: 150,
-      float: "float:right",
+      float: "right",
     },
     notOwner: {
       width: 200,
       height: 150,
-      float: "float:left",
+      float: "left",
     }
 });
 
