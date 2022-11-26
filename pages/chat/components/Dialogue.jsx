@@ -8,6 +8,7 @@ import Input from "./Input"
 import Appbar from "./Appbar";
 import { getDoc, doc, setDoc, onSnapshot } from 'firebase/firestore';
 import { database } from '../../../config/firebase';
+import { useAuth } from "../../../context/AuthContext"
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import AppBar from '@mui/material/AppBar';
@@ -40,13 +41,14 @@ const useStyles = makeStyles({
 
 const Dialogue = () => {
     const { data } = useContext(ChatContext);
+    const { user } = useAuth();
     const [msgs, setMsgs] = useState([]);
     const classes = useStyles();
 
     useEffect(() => {
         console.log(data.chatId)
         const unsub = onSnapshot(doc(database, "chats", data.chatId), (doc)=>{
-            doc.exists() && setMsgs(doc.data().messages);
+            doc.exists() && setMsgs(doc.get(user.uid));
         })
         return () => {
             unsub()
@@ -58,7 +60,7 @@ const Dialogue = () => {
             <Grid component={Paper} xs={12}>
                 <Appbar />
                 <List className={classes.messageArea}>
-                    {msgs.map(m=>(
+                    {msgs?.map(m=>(
                         <Message message={m}/>
                     ))}
                 </List>
