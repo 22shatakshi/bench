@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react'
+import { useState, useContext, useRef } from 'react'
 import { useAuth } from '../../../context/AuthContext'
 import { ChatContext } from '../../../context/ChatContext';
 import Grid from '@material-ui/core/Grid';
@@ -16,6 +16,7 @@ const Input = () => {
     const [file, setFile]  = useState(null);
     const { data } = useContext(ChatContext);
     const { user } = useAuth();
+    const fileInput = useRef();
     
 
     const handleSend = async () => {
@@ -96,7 +97,9 @@ const Input = () => {
                         <TextField id="outlined-basic-email" label="Type Something" fullWidth value={text} onChange={(e) => setText(e.target.value)}/>
                     </Grid>
                     <Grid xs={1} style={{float:"right"}}>
-                        <Fab color="primary" aria-label="add image" ><input type="file" onChange={(e) => setFile(e.target.files[0])}/><ImageIcon /></Fab>
+                        <label htmlFor="upload-photo">
+                        <input ref={fileInput} style={{ display: 'none' }} type="file" onChange={(e) => setFile(e.target.files[0])}/><Fab color="primary" aria-label="add image" onClick={()=>fileInput.current.click()} ><ImageIcon /></Fab>
+                        </label>
                     </Grid>
                     <Grid xs={1} style={{float:"right"}}>
                         <Fab color="primary" aria-label="add" onClick={handleSend}><SendIcon /></Fab>
