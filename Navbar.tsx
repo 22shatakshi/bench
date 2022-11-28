@@ -32,7 +32,6 @@ const NavbarComp = () => {
               <Nav.Link href="/dashboard">Explore</Nav.Link>
               <Nav.Link href="/profile/myProfile">My Profile</Nav.Link>
               <Nav.Link href="/event/myEvent">My Event</Nav.Link>
-              <Nav.Link href="/chat">Chat</Nav.Link>
               <Nav.Link href="/search">Search</Nav.Link>
               <NavDropdown title="Settings" id="collapseble submenu">
                 <DropdownSubmenu title="Manage Account">
@@ -48,6 +47,16 @@ const NavbarComp = () => {
                       router.push('/login')
                   }}>
                       Delete Account
+                  </NavDropdown.Item>
+                </DropdownSubmenu>
+              </NavDropdown>
+              <NavDropdown title="Messages" id="collapseble submenu">
+                <DropdownSubmenu title="Messages">
+                  <NavDropdown.Item href="/chats">
+                      Chats
+                  </NavDropdown.Item>
+                  <NavDropdown.Item href="/requests">
+                      Requests
                   </NavDropdown.Item>
                 </DropdownSubmenu>
               </NavDropdown>
