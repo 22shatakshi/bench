@@ -1,9 +1,3 @@
-//--------------------------------Block----------------------------------------
-import { collection, getDoc, getDocs, doc, getFirestore, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
-import { getAuth } from 'firebase/auth'
-//-----------------------------------------------------------------------------
-
-
 import { database } from '../../config/firebase';
 import { serializeDocumentSnapshot, serializeQuerySnapshot, deserializeDocumentSnapshot, deserializeDocumentSnapshotArray } from "firestore-serializers";
 import userlistRequest from "../../data/userList"
@@ -21,22 +15,17 @@ import {
     MDBProgressBar,
     MDBListGroup,
     MDBListGroupItem,
-    MDBIcon,
     MDBBtn
 } from 'mdb-react-ui-kit';
+import { MDBIcon } from 'mdbreact';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+import 'bootstrap-css-only/css/bootstrap.min.css';
+
 import { useRouter } from "next/router";
 //npm install firestore-serializers
 
-
-
-//---------------------------------Block---------------------------
-const auth = getAuth()
-const user = auth.currentUser
-//var isBlock = false
-//-----------------------------------------------------------------
-
-
-
+import { collection, getDoc, getDocs, doc, getFirestore, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
+import { getAuth } from 'firebase/auth'
 
 export const getStaticPaths = async () => {
     let users = await userlistRequest()
@@ -63,13 +52,11 @@ export const getStaticProps = async (context) => {
     }
 }
 
-
-
-
-//----------------------------------Block---------------------------------------------------
 const handleBlock = async (event, username) => {
     event.preventDefault()
     // insert it in the current user's blockUsernames field,
+    const auth = getAuth()
+    const user = auth.currentUser
     var useridRef = await doc(database, "userid", user.uid)
     await updateDoc(useridRef, {
         blockUsernames: arrayUnion(username)
@@ -82,6 +69,8 @@ const handleBlock = async (event, username) => {
 const handleUnblock = async (event, username) => {
     event.preventDefault()
     // remove it in the current user's blockUsernames field,
+    const auth = getAuth()
+    const user = auth.currentUser
     var useridRef = await doc(database, "userid", user.uid)
     await updateDoc(useridRef, {
         blockUsernames: arrayRemove(username)
@@ -89,14 +78,39 @@ const handleUnblock = async (event, username) => {
 
     alert(`The user ${username} is unblocked successfully.\n`)
 }
-//------------------------------------------------------------------------------------------
 
+//--------------------------------------------------------------------------
+const handleMessage = async (event, uid, username) => {
+    const auth = getAuth()
+    const user = auth.currentUser
+    const combinedId = user.uid > uid ? user.uid + uid : uid + user.uid;
+    var doesRequestExist = false;
 
-
+    // Verify if chat exists
+    if (doesRequestExist) {
+        router.push('/chat') //TODO: what's the address of the chat space?
+        console.log("Prev chatRequest exists:", docSnap.data());
+    } else {
+        // if no, then send a notification to target user's My Event page
+        try {
+            await setDoc(doc(database, "chatRequest", combinedId), {
+                senderUid: user.uid,
+                targetUid: uid,
+                hasResponded: false
+            });
+            alert(`Message Request is sent to the username ${username} successfully.\n`)
+        } catch (e) {
+            console.log("Error adding chatRequest document: ", e)
+        }
+        console.log("No Prev chatRequest");
+    }
+}
+//--------------------------------------------------------------------------
 
 const Profile = ({ user }) => {
     const router = useRouter()
     const data = deserializeDocumentSnapshot(user, getFirestore())
+    console.log("hello", data)
     const [loading, setLoading] = useState(true)
     const storage = getStorage();
     var imageLink
@@ -113,13 +127,6 @@ const Profile = ({ user }) => {
         fetchProfileImage()
     }, [])
 
-    // //-------------------------------Check-if-Blocked---------------------------------
-    // for (var i = 0; i < user.blockUsernames.length; i++) {
-    //     if (user.blockUsernames[i] == username) {
-    //         isBlock = true
-    //     }
-    // }
-    // //-----------------------------------------------------------------------------
 
     return (
         <section style={{ backgroundColor: '#eee' }}>
@@ -139,6 +146,15 @@ const Profile = ({ user }) => {
                                         fluid />
                                     <p className="text-muted mb-1">{data.get("username")}</p>
                                     <p className="text-muted mb-4">Status: {data.get("status")}</p>
+                                    <MDBBtn style={{ backgroundColor: 'red', borderColor: "red" }} onClick={(event) => handleBlock(event, data.get("username"))}>
+                                        Block
+                                    </MDBBtn>
+                                    <MDBBtn onClick={(event) => handleUnblock(event, data.get("username"))}>
+                                        Unblock
+                                    </MDBBtn>
+                                    <MDBBtn onClick={(event) => handleMessage(event, data.get("uid"), data.get("username"))}>
+                                        Message
+                                    </MDBBtn>
                                 </MDBCardBody>
                             </MDBCard>
 
@@ -146,20 +162,16 @@ const Profile = ({ user }) => {
                                 <MDBCardBody className="p-0">
                                     <MDBListGroup flush className="rounded-3">
                                         <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
-                                            <MDBIcon fas icon="globe fa-lg text-warning" />
-                                            <MDBCardText><a href="https://github.com/22shatakshi/bench" style={{ color: '#000000' }}>Website</a></MDBCardText>
-                                        </MDBListGroupItem>
-                                        <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
                                             <MDBIcon fab icon="twitter fa-lg" style={{ color: '#55acee' }} />
-                                            <MDBCardText><a href="https://github.com/22shatakshi/bench" style={{ color: '#000000' }}>@shatakshi</a></MDBCardText>
+                                            <MDBCardText><a href={data.get("twitter")} style={{ color: '#000000' }}>{data.get("twitter")}</a></MDBCardText>
                                         </MDBListGroupItem>
                                         <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
                                             <MDBIcon fab icon="instagram fa-lg" style={{ color: '#ac2bac' }} />
-                                            <MDBCardText><a href="https://github.com/22shatakshi/bench" style={{ color: '#000000' }}>@shatakshi</a></MDBCardText>
+                                            <MDBCardText><a href={data.get("instagram")} style={{ color: '#000000' }}>{data.get("instagram")}</a></MDBCardText>
                                         </MDBListGroupItem>
                                         <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
                                             <MDBIcon fab icon="facebook fa-lg" style={{ color: '#3b5998' }} />
-                                            <MDBCardText><a href="https://github.com/22shatakshi/bench" style={{ color: '#000000' }}>@shatakshi</a></MDBCardText>
+                                            <MDBCardText><a href={data.get("facebook")} style={{ color: '#000000' }}>{data.get("facebook")}</a></MDBCardText>
                                         </MDBListGroupItem>
                                     </MDBListGroup>
                                 </MDBCardBody>
@@ -260,21 +272,7 @@ const Profile = ({ user }) => {
                     </MDBRow>
                         <MDBBtn style={{ float: 'right' }} onClick={() => router.push('/dashboard')}>
                             Go Back
-                        </MDBBtn>
-
-
-    //-----------------------------------------------Block------------------------------------------------------------
-                        <MDBBtn style={{ float: 'right' }} onClick={(event) => handleBlock(event, data.get("username"))}>
-                            Block
-                        </MDBBtn>
-                        <MDBBtn style={{ float: 'right' }} onClick={(event) => handleUnblock(event, data.get("username"))}>
-                            Unblock
-                        </MDBBtn>
-    //--------------------------------------------------------------------------------------------------------------
-
-
-                    </>
-                )}
+                        </MDBBtn></>)}
             </MDBContainer>
         </section>
     )
