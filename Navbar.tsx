@@ -52,7 +52,7 @@ const NavbarComp = () => {
               </NavDropdown>
               <NavDropdown title="Messages" id="collapseble submenu">
                 <DropdownSubmenu title="Messages">
-                  <NavDropdown.Item href="/chats">
+                  <NavDropdown.Item href="/chat">
                       Chats
                   </NavDropdown.Item>
                   <NavDropdown.Item href="/requests">
