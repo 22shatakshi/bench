@@ -15,7 +15,8 @@ import {
     MDBProgressBar,
     MDBListGroup,
     MDBListGroupItem,
-    MDBBtn
+    MDBBtn,
+    MDBSwitch
 } from 'mdb-react-ui-kit';
 import { MDBIcon } from 'mdbreact';
 import '@fortawesome/fontawesome-free/css/all.min.css';
@@ -52,61 +53,38 @@ export const getStaticProps = async (context) => {
     }
 }
 
-const handleBlock = async (event, username) => {
+//----------------------------------------------------------
+const handleBlock = async (event, uid) => {
     event.preventDefault()
-    // insert it in the current user's blockUsernames field,
-    const auth = getAuth()
-    const user = auth.currentUser
-    var useridRef = await doc(database, "userid", user.uid)
-    await updateDoc(useridRef, {
-        blockUsernames: arrayUnion(username)
-    });
 
-    alert(`The user ${username} is blocked successfully.\n
+    var isChecked = event.checked
+
+    if (isChecked) { // do unblock
+        // remove it in the current user's blocked field,
+        const auth = getAuth()
+        const user = auth.currentUser
+        var useridRef = await doc(database, "userid", user.uid)
+        await updateDoc(useridRef, {
+            blocked: arrayRemove(uid)
+        });
+
+        alert(`The user ${username} is unblocked successfully.\n`)
+    } else { // do block
+        // insert it in the current user's blocked field,
+        const auth = getAuth()
+        const user = auth.currentUser
+        var useridRef = await doc(database, "userid", user.uid)
+        await updateDoc(useridRef, {
+            blocked: arrayUnion(uid)
+        });
+
+        alert(`The user ${username} is blocked successfully.\n
     To unblock, please search for the user and go to their profile.`)
-}
-
-const handleUnblock = async (event, username) => {
-    event.preventDefault()
-    // remove it in the current user's blockUsernames field,
-    const auth = getAuth()
-    const user = auth.currentUser
-    var useridRef = await doc(database, "userid", user.uid)
-    await updateDoc(useridRef, {
-        blockUsernames: arrayRemove(username)
-    });
-
-    alert(`The user ${username} is unblocked successfully.\n`)
-}
-
-//--------------------------------------------------------------------------
-const handleMessage = async (event, uid, username) => {
-    const auth = getAuth()
-    const user = auth.currentUser
-    const combinedId = user.uid > uid ? user.uid + uid : uid + user.uid;
-    const docRef = doc(database, "chats", combinedId);
-    const docSnap = await getDoc(docRef);
-
-    // Verify if chat exists
-    if (docSnap.exists()) {
-        // router.push('/chat/' + chatId) //TODO: what's the address of the chat space?
-        console.log("Prev chatRequest exists:", docSnap.data());
-    } else {
-        // if no, then send a notification to target user's My Event page
-        try {
-            await setDoc(doc(database, "chatRequest", combinedId), {
-                senderUid: user.uid,
-                targetUid: uid,
-                hasResponded: false
-            });
-            alert(`Message Request is sent to the username ${username} successfully.\n`)
-        } catch (e) {
-            console.log("Error adding chatRequest document: ", e)
-        }
-        console.log("No Prev chatRequest");
     }
 }
-//--------------------------------------------------------------------------
+
+var isBlocked = false;
+//-----------------------------------------------------------------------------------
 
 const Profile = ({ user }) => {
     const router = useRouter()
@@ -126,6 +104,17 @@ const Profile = ({ user }) => {
             setLoading(false)
         }
         fetchProfileImage()
+        
+        //------------------------------------------------------------
+        for (var i = 0; i < blockedUids.length; i++) {
+            single_blockedUid = blockedUids[i];
+            if (user.uid == single_blockedUid) {
+                isBlocked = true
+            } else {
+                isBlocked = false
+            }
+        }
+        //-------------------------------------------------------------
     }, [])
 
 
@@ -147,15 +136,12 @@ const Profile = ({ user }) => {
                                         fluid />
                                     <p className="text-muted mb-1">{data.get("username")}</p>
                                     <p className="text-muted mb-4">Status: {data.get("status")}</p>
-                                    <MDBBtn style={{ backgroundColor: 'red', borderColor: "red" }} onClick={(event) => handleBlock(event, data.get("username"))}>
-                                        Block
-                                    </MDBBtn>
-                                    <MDBBtn onClick={(event) => handleUnblock(event, data.get("username"))}>
-                                        Unblock
-                                    </MDBBtn>
-                                    <MDBBtn onClick={(event) => handleMessage(event, data.get("uid"), data.get("username"))}>
-                                        Message
-                                    </MDBBtn>
+                                     //---------------------------------------------------------------------
+                                    <MDBSwitch style={{ backgroundColor: 'red', borderColor: "red" }} onClick={(event) => handleBlock(event, data.get("uid"))} checked={isBlocked ? "true" : "false"}>
+                                        {isBlocked ? "Unblock" : "Block"}
+                                    </MDBSwitch>
+                                    //---------------------------------------------------------------------
+  
                                 </MDBCardBody>
                             </MDBCard>
 
