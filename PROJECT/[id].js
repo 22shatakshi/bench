@@ -84,11 +84,12 @@ const handleMessage = async (event, uid, username) => {
     const auth = getAuth()
     const user = auth.currentUser
     const combinedId = user.uid > uid ? user.uid + uid : uid + user.uid;
-    var doesRequestExist = false;
+    const docRef = doc(database, "chats", combinedId);
+    const docSnap = await getDoc(docRef);
 
     // Verify if chat exists
-    if (doesRequestExist) {
-        router.push('/chat') //TODO: what's the address of the chat space?
+    if (docSnap.exists()) {
+        // router.push('/chat/' + chatId) //TODO: what's the address of the chat space?
         console.log("Prev chatRequest exists:", docSnap.data());
     } else {
         // if no, then send a notification to target user's My Event page
