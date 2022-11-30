@@ -11,8 +11,7 @@ export const ChatContext = createContext({});
 export const ChatContextProvider = ({ children }) => {
     const { user } = useAuth();
     const INITIAL_STATE = {
-      chatId: "null",
-      payloadId: "null",
+      chatId: "default",
       user: {},
     };
   
@@ -22,12 +21,16 @@ export const ChatContextProvider = ({ children }) => {
           case "CHANGE_USER":
             return {
               user: action.payload,
-              payloadId: action.payload.uid,
               chatId:
                 user!.uid > action.payload.uid
                   ? user!.uid + action.payload.uid
                   : action.payload.uid + user!.uid,
             };
+            case "BLOCK_USER": 
+              return {
+                user: {},
+                chatId: "default",
+              }
     
           default:
             return state;
