@@ -1,6 +1,7 @@
 import { database } from '../../config/firebase';
 import {serializeDocumentSnapshot, serializeQuerySnapshot, deserializeDocumentSnapshot, deserializeDocumentSnapshotArray} from "firestore-serializers";
 import userlistRequest from "../../data/userList"
+import currentUserDataRequest from "../../data/currectUser"
 import {
     MDBCol,
     MDBContainer,
@@ -13,19 +14,22 @@ import {
     MDBProgressBar,
     MDBListGroup,
     MDBListGroupItem,
-    MDBBtn
+    MDBBtn,
+    MDBSwitch
   } from 'mdb-react-ui-kit';
 import { MDBIcon } from 'mdbreact';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap-css-only/css/bootstrap.min.css';
 
 import { useRouter } from "next/router";
+import { useAuth } from "../../context/AuthContext"
 //npm install firestore-serializers
 
 
 //--------------------------------Block----------------------------------------
 import { getDoc, doc, getFirestore, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 import { getAuth } from 'firebase/auth'
+import { useEffect, useId, useState } from 'react';
 //-----------------------------------------------------------------------------
 
 export const getStaticPaths = async () => {
@@ -48,68 +52,86 @@ export const getStaticProps = async (context) => {
     console.log(docSnap.data())
     const serializedDoc = serializeDocumentSnapshot(docSnap)
     return {
-        props: { user: serializedDoc}
+        props: { selected: serializedDoc}
     }
 }
 
-const handleBlock = async (event, username) => {
-    event.preventDefault()
-    // insert it in the current user's blockUsernames field,
-    const auth = getAuth()
-    const user = auth.currentUser
-    var useridRef = await doc(database, "userid", user.uid)
-    await updateDoc(useridRef, {
-        blocked: arrayUnion(username)
-    });
 
-    alert(`The user ${username} is blocked successfully.\n
-    To unblock, please search for the user and go to their profile.`)
-}
+const Profile = ({ selected }) => {
+    const router = useRouter()
+    const data = deserializeDocumentSnapshot(selected, getFirestore())
+    const [block, setBlock] = useState(false);
+    const { user } = useAuth()
 
-const handleUnblock = async (event, username) => {
-    event.preventDefault()
-    // remove it in the current user's blockUsernames field,
-    const auth = getAuth()
-    const user = auth.currentUser
-    var useridRef = await doc(database, "userid", user.uid)
-    //instead of username change it to uid
-    await updateDoc(useridRef, {
-        blocked: arrayRemove(username)
-    });
+    const handleBlockSwitch = async (event, blockId) => {
+        if (event.target.checked) {
+            setBlock(true);
+            await handleBlock(blockId);
+        }
+        else {
+            setBlock(false);
+            await handleUnblock(blockId);
+        }
+    }
 
-    alert(`The user ${username} is unblocked successfully.\n`)
-}
-//------------------------------------------------------------------------------------------
-
-const handleChatRequest = async (event, targetData) => {
-    event.preventDefault();
-    const auth = getAuth();
-    const user = auth.currentUser;
-    const targetId = targetData.get("uid")
-    const combinedId = user.uid > targetId ? user.uid + targetId : targetId + user.uid;
-    const res = await getDoc(doc(database, "chats", combinedId));
-    console.log(combinedId)
-    //there is not a chat between 2 users
-    console.log(res.exists())
-    if (!res.exists()) {
-        const docRef = doc(database, "chatRequest", targetId);
-        await updateDoc(docRef, {
-            [user.uid]: {
-                uid: user.uid,
-                displayName: user.displayName,
-                photoURL: user.photoURL,
-            },
-        }); 
+    const handleBlock = async (uid) => {
+        const useridRef = await doc(database, "userid", user.uid)
+        await updateDoc(useridRef, {
+            blocked: arrayUnion(uid)
+        });
+    
+        alert(`The user ${data.get("username")} is blocked successfully.\n
+        To unblock, please search for the user and go to their profile.`)
     }
     
-}
-
-const Profile = ({ user }) => {
-    const router = useRouter()
-    const data = deserializeDocumentSnapshot(user, getFirestore())
-    const blocked = data.get("blocked");
-    const currentUser = getAuth().currentUser;
+    const handleUnblock = async (uid) => {
+        // remove it in the current user's blockUsernames field,
+        const useridRef = await doc(database, "userid", user.uid)
+        //instead of username change it to uid
+        await updateDoc(useridRef, {
+            blocked: arrayRemove(uid)
+        });
+    
+        alert(`The user ${data.get("username")} is unblocked successfully.\n`)
+    }
+    
+    
+    const handleChatRequest = async (event, targetData) => {
+        event.preventDefault();
+        const targetId = targetData.get("uid")
+        const combinedId = user.uid > targetId ? user.uid + targetId : targetId + user.uid;
+        const res = await getDoc(doc(database, "chats", combinedId));
+        console.log(combinedId)
+        //there is not a chat between 2 users
+        console.log(res.exists())
+        if (!res.exists()) {
+            const docRef = doc(database, "chatRequest", targetId);
+            await updateDoc(docRef, {
+                [user.uid]: {
+                    uid: user.uid,
+                    displayName: user.displayName,
+                    photoURL: user.photoURL,
+                },
+            }); 
+        }
+    }
+    
+    useEffect(() => {
+        const fetchBlockState = async () => {
+            const currentUserData = await currentUserDataRequest();
+            const blockedList = currentUserData.blocked;
+            for (var i = 0; i < blockedList.length; i++) {
+                if (data.get("uid") == blockedList[i]) {
+                    setBlock(true);
+                    break;
+                }
+            }
+        }
+        fetchBlockState();
+    }, [])
     //check if current user uid is in the block list
+
+
 
     return (
         <section style={{ backgroundColor: '#eee' }}>
@@ -126,12 +148,7 @@ const Profile = ({ user }) => {
                                 fluid />
                             <p className="text-muted mb-1">{data.get("username")}</p>
                             <p className="text-muted mb-4">Status: {data.get("status")}</p>
-                            <MDBBtn style={{ backgroundColor:'red', borderColor: "red"}} onClick={(event) => handleBlock(event, data.get("username"))}>
-                                    Block
-                            </MDBBtn>
-                            <MDBBtn onClick={(event) => handleUnblock(event, data.get("username"))}>
-                                    Unblock
-                            </MDBBtn>
+                            <MDBSwitch label='Block Switch' style={{ backgroundColor: 'red', borderColor: "red" }} checked={block ? true : false} onClick={(event) => handleBlockSwitch(event, data.get("uid"))}/>
                             <MDBBtn onClick={(event) => handleChatRequest(event, data)}>
                                     Send Chat Request
                             </MDBBtn>
