@@ -62,8 +62,7 @@ const Signup = () => {
             gender: "",
             sports: "any",
             status: "Available",
-            blockUsernames: [],
-            matchedUsers: [],
+            blocked: [],
             photoURL: imageLink,
           });
           await setDoc(doc(database, "username", data.username), {
@@ -71,10 +70,11 @@ const Signup = () => {
           });
           await setDoc(doc(database, "chatInfo", userData.uid!), {
           });
+          await setDoc(doc(database, "chatRequest", userData.uid!), {
+          });
           updateProfile(curUser!, {
             displayName: data.name, photoURL: imageLink
           }).then(() => {
-            console.log("Profile updated");
             console.log(curUser)
           }).catch((error) => {
             console.log(error);
