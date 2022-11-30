@@ -127,6 +127,13 @@ const Profile = ({ selected }) => {
                 }
             }
         }
+        const b = data.get("blocked");
+        for (var i = 0; i < b.length; i++) {
+            if (b[i] == user.uid) {
+                alert(`You are not able to access ${data.get("username")}'s profile.\n`)
+                router.push('/dashboard');
+            }
+        }
         fetchBlockState();
     }, [])
     //check if current user uid is in the block list
