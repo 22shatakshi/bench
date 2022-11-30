@@ -1,4 +1,5 @@
 import { database } from '../../config/firebase';
+//npm install firestore-serializers
 import {serializeDocumentSnapshot, serializeQuerySnapshot, deserializeDocumentSnapshot, deserializeDocumentSnapshotArray} from "firestore-serializers";
 import userlistRequest from "../../data/userList"
 import currentUserDataRequest from "../../data/currectUser"
@@ -23,14 +24,9 @@ import 'bootstrap-css-only/css/bootstrap.min.css';
 
 import { useRouter } from "next/router";
 import { useAuth } from "../../context/AuthContext"
-//npm install firestore-serializers
-
-
-//--------------------------------Block----------------------------------------
 import { getDoc, doc, getFirestore, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 import { getAuth } from 'firebase/auth'
 import { useEffect, useId, useState } from 'react';
-//-----------------------------------------------------------------------------
 
 export const getStaticPaths = async () => {
     let users = await userlistRequest()
@@ -155,7 +151,7 @@ const Profile = ({ selected }) => {
                                 fluid />
                             <p className="text-muted mb-1">{data.get("username")}</p>
                             <p className="text-muted mb-4">Status: {data.get("status")}</p>
-                            <MDBSwitch label='Block Switch' style={{ backgroundColor: 'red', borderColor: "red" }} checked={block ? true : false} onClick={(event) => handleBlockSwitch(event, data.get("uid"))}/>
+                            <MDBSwitch label='Block Switch' style={block ? { backgroundColor: 'red', borderColor: "red" } : { backgroundColor: 'blue', borderColor: "blue" }} checked={block ? true : false} onClick={(event) => handleBlockSwitch(event, data.get("uid"))}/>
                             <MDBBtn onClick={(event) => handleChatRequest(event, data)}>
                                     Send Chat Request
                             </MDBBtn>
