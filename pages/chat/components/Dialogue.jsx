@@ -6,18 +6,11 @@ import { ChatContext } from '../../../context/ChatContext';
 import Message from "./Message"
 import Input from "./Input"
 import Appbar from "./Appbar";
-import { getDoc, doc, setDoc, onSnapshot } from 'firebase/firestore';
+import { doc, onSnapshot } from 'firebase/firestore';
 import { database } from '../../../config/firebase';
 import { useAuth } from "../../../context/AuthContext"
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import AppBar from '@mui/material/AppBar';
-import Avatar from '@mui/material/Avatar';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
 
 const useStyles = makeStyles({
     table: {

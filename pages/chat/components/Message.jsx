@@ -4,7 +4,6 @@ import { useAuth } from "../../../context/AuthContext"
 import { ChatContext } from "../../../context/ChatContext"
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import ImageListItem from '@mui/material/ImageListItem';
 import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles({
