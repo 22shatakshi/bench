@@ -48,7 +48,7 @@ const RequestList = () => {
                         photoURL: selected.photoURL,
                         timestamp: Timestamp.now(),             
                     },
-                    [combinedId + ".lastMsg"]: selected.displayName + "has accepted your request.",
+                    [combinedId + ".lastMsg"]: "You have accepted " + selected.displayName + "'s request.",
                 }); 
                 await updateDoc(doc(database, "chatInfo", selected.uid), {
                     [combinedId + ".userInfo"]: {
@@ -57,7 +57,7 @@ const RequestList = () => {
                         photoURL: user.photoURL,
                         timestamp: Timestamp.now(),
                     },
-                    [combinedId + ".lastMsg"]: user.displayName + "has accepted your request.",
+                    [combinedId + ".lastMsg"]: user.displayName + " has accepted your request.",
                 });      
             }
         } catch (error) {
