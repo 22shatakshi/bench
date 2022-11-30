@@ -50,7 +50,7 @@ const Dashboard = () => {
       const useridRef = await doc(database, "userid", user!.uid)
       const docSnap = await getDoc(useridRef)
       const sports = await docSnap.get("sports")
-      const blockUsernames = await docSnap.get("blocked")
+      const blocked = await docSnap.get("blocked")
       const q = query(collection(database, "userid"), where("sports", "==", sports));
       //const q = query(collection(database, "userid"), where("sports", "==", sports));
       const temp = await getCountFromServer(q)
@@ -68,10 +68,10 @@ const Dashboard = () => {
           var matched = docSnapshots[random].data()
           var isBlock: boolean
           isBlock = false
-          for (var i = 0; i < blockUsernames.length; i++) {
-            if (blockUsernames[i] == matched.username) {
-              isBlock = true
-              console.log("User " + matched.username + " just got blocked.");
+          for (var i = 0; i < blocked.length; i++) {
+            if (blocked[i] == matched.uid) {
+              isBlock = true;
+              break;
             }
           }
           if (isBlock) { // is in the block list
