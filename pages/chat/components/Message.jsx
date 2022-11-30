@@ -4,19 +4,51 @@ import { useAuth } from "../../../context/AuthContext"
 import { ChatContext } from "../../../context/ChatContext"
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import ImageListItem from '@mui/material/ImageListItem';
 import Grid from '@material-ui/core/Grid';
+import { color } from '@mui/system';
 
 const useStyles = makeStyles({
     imageOwner: {
-      width: 200,
-      height: "auto",
-      float: "right",
+        width: 200,
+        height: "auto",
+        float: "right",
+        borderRadius: '10px',
+        margin: '5px',
+        padding: '10px',
+        display: 'inline-block',
+        background: '#e5e5ea'     
     },
     notOwner: {
-      width: 200,
-      height: "auto",
-      float: "left",
-    }
+        width: 200,
+        height: "auto",
+        float: "left",
+        borderRadius: '10px',
+        margin: '5px',
+        padding: '10px',
+        display: 'inline-block',
+        background: '#248bf5',
+        color: '#ffffff'
+    },
+    leftmessage: {
+        float: "left",
+        borderRadius: '10px',
+        margin: '5px',
+        padding: '10px',
+        display: 'inline-block',
+        background: '#248bf5',
+        color: '#ffffff'
+    },
+    rightmessage: {
+        float: "right",
+        borderRadius: '10px',
+        margin: '5px',
+        padding: '10px',
+        display: 'inline-block',
+        background: '#e5e5ea'
+        
+    },
+
 });
 
 const Message = ({message}) => {
@@ -34,10 +66,12 @@ const Message = ({message}) => {
         <ListItem key="1">
             <Grid container>
                 <Grid item xs={12}>
-                    <p><ListItemText style={{float: message.sender === user.uid ? "right" : "left"}} primary={message.text}></ListItemText></p>
+                    {message.text &&
+                    <p><ListItemText className={message.sender === user.uid ? classes.rightmessage : classes.leftmessage} primary={message.text}></ListItemText></p>
+                    }
+                    {message.text && message.file && <><br /><br/></>}
                     {message.file && <img
-                        src={message.file} className={message.sender === user.uid? classes.imageOwner : classes.notOwner}
-                    />}
+                        src={message.file} className={message.sender === user.uid ? classes.imageOwner : classes.notOwner} />}
                 </Grid>
             </Grid>
         </ListItem>
@@ -45,3 +79,4 @@ const Message = ({message}) => {
 }
 
 export default Message;
+
