@@ -50,7 +50,7 @@ const Dashboard = () => {
       const useridRef = await doc(database, "userid", user!.uid)
       const docSnap = await getDoc(useridRef)
       const sports = await docSnap.get("sports")
-      const blockUsernames = await docSnap.get("blockUsernames")
+      const blockUsernames = await docSnap.get("blocked")
       const q = query(collection(database, "userid"), where("sports", "==", sports));
       //const q = query(collection(database, "userid"), where("sports", "==", sports));
       const temp = await getCountFromServer(q)
