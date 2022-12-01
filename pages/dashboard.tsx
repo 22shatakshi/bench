@@ -37,6 +37,11 @@ const Dashboard = () => {
     sport2: '',
     sport3: ''
   })
+  const [photo, setPhoto] = useState({
+    photo1: '',
+    photo2: '',
+    photo3: ''
+  })
   const [loading, setLoading] = useState(true)
   const [user1, setUser1] = useState(false)
   const [user2, setUser2] = useState(false)
@@ -107,6 +112,11 @@ const Dashboard = () => {
           sport2: docSnapshots[matchedlist[0]].data().sports,
           sport3: docSnapshots[matchedlist[0]].data().sports
         })
+        setPhoto({
+          photo1: docSnapshots[matchedlist[0]].data().photoURL,
+          photo2: docSnapshots[matchedlist[1]].data().photoURL,
+          photo3: docSnapshots[matchedlist[2]].data().photoURL
+        })
       }
       docSnapshotsGlobal = docSnapshots
       setLoading(false)
@@ -152,6 +162,11 @@ const Dashboard = () => {
           sport2: sports.sport2,
           sport3: sports.sport3
         })
+        setPhoto({
+          photo1: docSnapshotsGlobal[random].data().photoURL,
+          photo2: photo.photo2,
+          photo3: photo.photo3
+        })
         setUser1(false)
       }
       else if (user2) {
@@ -180,6 +195,11 @@ const Dashboard = () => {
           sport2: docSnapshotsGlobal[random].data().sports,
           sport3: sports.sport3
         })
+        setPhoto({
+          photo1: photo.photo1,
+          photo2: docSnapshotsGlobal[random].data().photoURL,
+          photo3: photo.photo3
+        })
         setUser2(false)
       }
       else {
@@ -207,6 +227,11 @@ const Dashboard = () => {
           sport1: sports.sport1,
           sport2: sports.sport2,
           sport3: docSnapshotsGlobal[random].data().sports,
+        })
+        setPhoto({
+          photo1: photo.photo1,
+          photo2: photo.photo2,
+          photo3: docSnapshotsGlobal[random].data().photoURL
         })
         setUser3(false)
       }   
@@ -237,7 +262,7 @@ const Dashboard = () => {
                 <MDBCardBody className="text-center">
                 <CloseButton style={{ float: 'right' }} onClick={() => {setUser1(true); remove = true;}}/>
                   <div className="mt-3 mb-4">
-                    <MDBCardImage src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
+                    <MDBCardImage src={photo.photo1}
                       className="rounded-circle" fluid style={{ width: '100px' }} />
                   </div>
                   <MDBTypography tag="h4">{username.user1name}</MDBTypography>
@@ -265,7 +290,7 @@ const Dashboard = () => {
                 <MDBCardBody className="text-center">
                 <CloseButton style={{ float: 'right' }} onClick={() => {setUser2(true); remove = true;}}/>
                   <div className="mt-3 mb-4">
-                    <MDBCardImage src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
+                    <MDBCardImage src={photo.photo2}
                       className="rounded-circle" fluid style={{ width: '100px' }} />
                   </div>
                   <MDBTypography tag="h4">{username.user2name}</MDBTypography>
@@ -294,7 +319,7 @@ const Dashboard = () => {
                 <MDBCardBody className="text-center">
                 <CloseButton style={{ float: 'right' }} onClick={() => {setUser3(true); remove = true;}}/>
                   <div className="mt-3 mb-4">
-                    <MDBCardImage src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava2-bg.webp"
+                    <MDBCardImage src={photo.photo3}
                       className="rounded-circle" fluid style={{ width: '100px' }} />
                   </div>
                   <MDBTypography tag="h4">{username.user3name}</MDBTypography>
