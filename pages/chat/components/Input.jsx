@@ -10,6 +10,7 @@ import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import ImageIcon from '@mui/icons-material/Image';
 import { v4 as uuid } from "uuid";
 import {  doc, updateDoc, arrayUnion, Timestamp, serverTimestamp } from 'firebase/firestore';
+import { Notify } from '../../notification/notify'
 
 const Input = () => {
     const [text, setText] = useState("");
@@ -86,6 +87,7 @@ const Input = () => {
             [data.chatId + ".lastMsg"]: text,
             [data.chatId + ".timestamp"]: serverTimestamp(),
         }); 
+        await Notify({ receiver: data.user.uid, content: "You have received a message: " + text })
         setFile(null);
         setText("");
     }
