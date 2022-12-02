@@ -1,13 +1,14 @@
 import React, {useState, useEffect } from 'react';
 import {TextField , Button, Rating } from '@mui/material';
-import { collection , query, orderBy , onSnapshot, addDoc,serverTimestamp, where, doc} from 'firebase/firestore';
+import { collection , query, orderBy , onSnapshot, addDoc,serverTimestamp, where, doc, updateDoc} from 'firebase/firestore';
 import { database } from '../../../config/firebase';
 import ReviewList from './list';
-
+import { getAuth } from 'firebase/auth';
 
 function Review({iden}) {
-
-  const [reviewee, setReviewee]=useState(iden); // username of target user
+  let total = 0;
+  const a = getAuth();
+  const [reviewee, setReviewee]=useState(iden); 
   const q = query(collection(database,'review'), where('reviewee', "==", reviewee));
 
   const [reviews,setReviews]=useState([]);
@@ -23,6 +24,23 @@ function Review({iden}) {
               })))
          })
     },[rate]);
+
+    reviews.forEach(e => total = total + parseInt(e.item.rate));
+    total = total / reviews.length;
+    total = Math.round(total * 100) / 100
+    if (isNaN(total)) total = 0;
+
+    const idDocRef = doc(database, "userid", a.currentUser?.uid);
+    const data = {
+      rating:total
+    }
+    updateDoc(idDocRef, data)
+      .then(idDocRef => {
+        console.log("A New Document Field has been added to an existing document");
+      })
+      .catch(error => {
+        console.log(error);
+      })  
 
   const addReview=(e)=>{
     if (iden != reviewee) {
@@ -52,10 +70,6 @@ function Review({iden}) {
 
  }
 
-  let total = 0;
-  reviews.forEach(e => total = total + parseInt(e.item.rate));
-  total = total / reviews.length;
-  total = Math.round(total * 100) / 100
 
   return (
     <div className="App">
