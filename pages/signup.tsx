@@ -72,6 +72,12 @@ const Signup = () => {
           });
           await setDoc(doc(database, "chatRequest", userData.uid!), {
           });
+          await setDoc(doc(database, "notification", userData.uid!), {
+            uid: userData.uid,
+            enable: true,
+            address: userData?.email, 
+
+          });
           updateProfile(curUser!, {
             displayName: data.name, photoURL: imageLink
           }).then(() => {
