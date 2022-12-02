@@ -22,8 +22,8 @@ async function currentUserDataRequest() {
         instagram: docSnap.get('instagram'),
         twitter: docSnap.get('twitter'),
         facebook: docSnap.get('facebook'),
-        matched: docSnap.get('matched'),
-        photoURL: docSnap.get('photoURL')
+        photoURL: docSnap.get('photoURL'),
+        blocked: docSnap.get('blocked')
     }
     return userData
 }
