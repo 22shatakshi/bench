@@ -128,7 +128,7 @@ const UserFind = () => {
                     <MDBContainer>
                     {userList?.length > 0 && userList?.map((user) => {
                         return (
-                            <div className="vh-100" style={{ backgroundColor: '#9de2ff' }}>
+                            <div>
                               <MDBRow className="justify-content-center">
                                 <MDBCol md="9" lg="7" xl="5" className="mt-5">
                                   <MDBCard style={{ borderRadius: '15px' }}>
@@ -137,7 +137,7 @@ const UserFind = () => {
                                         <div className="flex-shrink-0">
                                           <MDBCardImage
                                             style={{ width: '180px', borderRadius: '10px' }}
-                                            src='https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp'
+                                            src={user.photoURL}
                                             alt='Generic placeholder image'
                                             fluid />
                                         </div>
@@ -147,21 +147,21 @@ const UserFind = () => {
                       
                                           <div className="d-flex justify-content-start rounded-3 p-2 mb-2"
                                             style={{ backgroundColor: '#efefef' }}>
-                                            <div>
+                                            <div className="px-3">
                                               <p className="small text-muted mb-1">Sports</p>
                                               <p className="mb-0">{user.sports}</p>
                                             </div>
-                                            <div className="px-3">
+                                            {/* <div className="px-3">
                                               <p className="small text-muted mb-1">Matched Times</p>
                                               <p className="mb-0">976</p>
-                                            </div>
+                                            </div> */}
                                             <div>
                                               <p className="small text-muted mb-1">Rating</p>
                                               <p className="mb-0">{user.rating}</p>
                                             </div>
                                           </div>
                                           <div className="d-flex pt-1">
-                                            <MDBBtn outline className="me-1 flex-grow-1">Chat</MDBBtn>
+                                            <MDBBtn outline className="me-1 flex-grow-1" style={{overflow: 'visible'}}>Chat</MDBBtn>
                                             <MDBBtn className="flex-grow-1" onClick={() => router.push('/users/' + user.uid)}>View Profile</MDBBtn>
                                           </div>
                                         </div>

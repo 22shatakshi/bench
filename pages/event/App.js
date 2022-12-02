@@ -11,6 +11,7 @@ function App({iden}) {
 
   const [todos,setTodos]=useState([]);
   const [content,setContent]=useState([]);
+  const [partner,setPartner]=useState('');
   const [input, setInput]=useState('');
 
   
@@ -23,6 +24,15 @@ function App({iden}) {
          })
     },[input]);
   const addTodo=(e)=>{
+
+    if (partner != '') {
+      addDoc(collection(database,'event'),{
+        todo:input,
+        content:content,
+        timestamp: serverTimestamp(),
+        uid:partner
+      })
+    }
     e.preventDefault();
        addDoc(collection(database,'event'),{
          todo:input,
@@ -30,11 +40,10 @@ function App({iden}) {
          timestamp: serverTimestamp(),
          uid:iden
        })
-       console.log('click')
       setInput('')
       setContent('')
+      setPartner('')
   };
-  console.log(todos);
 
   return (
     <div className="App">
@@ -45,6 +54,9 @@ function App({iden}) {
          <br></br>
          <TextField id="outlined-basic" label="Content" variant="outlined" style={{margin:"5px 5px"}} size="big" value={content}
          onChange={e=>setContent(e.target.value)} />
+         <br></br>
+         <TextField id="outlined-basic" label="Partner email" variant="outlined" style={{margin:"5px 5px"}} size="big" value={partner}
+         onChange={e=>setPartner(e.target.value)} />
          <br></br>
         <Button variant="contained" style={{margin:"5px 5px"}} color="primary" size="small" onClick={addTodo}>Add Event</Button>
       </form>

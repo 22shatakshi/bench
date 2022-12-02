@@ -4,18 +4,18 @@ import { useAuth } from '../context/AuthContext'
 import { useRouter } from 'next/router'
 import { database } from '../config/firebase'
 import { doc, setDoc, getDoc } from "firebase/firestore"; 
-import { getAuth } from 'firebase/auth'
+import { getAuth, updateProfile } from 'firebase/auth'
+import { ref, getDownloadURL } from "firebase/storage";
+import { storage } from "../config/firebase";
 
 const Signup = () => {
   const router = useRouter()
   const { user, signup } = useAuth()
-  console.log(user)
   const [data, setData] = useState({
     email: '',
     password: '',
     confirmPassword: '',
     username: '',
-    dob: '',
     name: ''
   })
   const [msg, setMsg] = useState("")
@@ -46,22 +46,44 @@ const Signup = () => {
           uid: curUser?.uid
         }
         try {
-          if (curUser) {
-            await setDoc(doc(database, "userid", curUser.uid), {
-              email: userData.email,
-              uid: userData.uid,
-              username: data.username,
-              birthday: "",
-              name: data.name,
-              address: "",
-              rating: 0,
-              gender: "",
-              sports: "any"
-            });
-          }
+          const imageLink = await getDownloadURL(ref(storage, "default.jpeg"));
+          await setDoc(doc(database, "userid", curUser!.uid), {
+            email: userData.email,
+            uid: userData.uid,
+            username: data.username,
+            birthday: "",
+            age: "",
+            name: data.name,
+            instagram: "Not Specified",
+            twitter: "Not Specified",
+            facebook: "Not Specified",
+            address: "",
+            rating: 0,
+            gender: "",
+            sports: "any",
+            status: "Available",
+            blocked: [],
+            photoURL: imageLink,
+          });
           await setDoc(doc(database, "username", data.username), {
             uid: userData.uid,
+          });
+          await setDoc(doc(database, "chatInfo", userData.uid!), {
+          });
+          await setDoc(doc(database, "chatRequest", userData.uid!), {
+          });
+          await setDoc(doc(database, "notification", userData.uid!), {
+            uid: userData.uid,
+            enable: true,
+            address: userData?.email, 
 
+          });
+          updateProfile(curUser!, {
+            displayName: data.name, photoURL: imageLink
+          }).then(() => {
+            console.log(curUser)
+          }).catch((error) => {
+            console.log(error);
           });
         } catch (e) {
            console.log("Error adding document: ", e)
@@ -115,6 +137,7 @@ const Signup = () => {
             value={data.username}
           />
         </Form.Group>
+
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Displayed Name</Form.Label>
           <Form.Control
@@ -130,6 +153,7 @@ const Signup = () => {
             value={data.name}
           />
         </Form.Group>
+
         <Form.Group className="mb-3" controlId="formBasicPassword">
           <Form.Label>Password</Form.Label>
           <Form.Control
@@ -172,5 +196,5 @@ const Signup = () => {
     </div>
   )
 }
-export default Signup
 
+export default Signup

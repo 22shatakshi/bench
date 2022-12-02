@@ -3,6 +3,7 @@ import type { AppProps } from 'next/app'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import Navbar from '../components/Navbar'
 import { AuthContextProvider } from '../context/AuthContext'
+import { ChatContextProvider } from '../context/ChatContext'
 import { useRouter } from 'next/router'
 import ProtectedRoute from '../components/ProtectedRoute'
 
@@ -18,10 +19,14 @@ function MyApp({ Component, pageProps }: AppProps) {
         <Component {...pageProps} />
       ) : (
         <ProtectedRoute>
-          <Component {...pageProps} />
+          <ChatContextProvider>
+            <Component {...pageProps} />
+          </ChatContextProvider>
         </ProtectedRoute>
       )}
     </AuthContextProvider>
   )
 }
+
 export default MyApp
+

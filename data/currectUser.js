@@ -11,7 +11,7 @@ async function currentUserDataRequest() {
     const userData = {
         uid: docSnap.get("uid"),
         username: docSnap.get("username"),
-        email: docSnap.get("eamil"),
+        email: docSnap.get("email"),
         name: docSnap.get("name"),
         sports: docSnap.get("sports"),
         rating: docSnap.get("rating"),
@@ -21,7 +21,9 @@ async function currentUserDataRequest() {
         gender: docSnap.get("gender"),
         instagram: docSnap.get('instagram'),
         twitter: docSnap.get('twitter'),
-        facebook: docSnap.get('facebook')
+        facebook: docSnap.get('facebook'),
+        photoURL: docSnap.get('photoURL'),
+        blocked: docSnap.get('blocked')
     }
     return userData
 }

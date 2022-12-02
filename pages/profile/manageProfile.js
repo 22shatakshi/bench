@@ -1,5 +1,5 @@
-import React, { Component, useEffect } from 'react'
-import { getFirestore, doc, updateDoc, getDoc } from "firebase/firestore";
+import React, { Component } from 'react'
+import { getFirestore, doc, updateDoc } from "firebase/firestore";
 import { getAuth } from 'firebase/auth';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
@@ -9,6 +9,7 @@ import currentUserDataRequest from '../../data/currectUser'
 
 const db = getFirestore();
 const a = getAuth();
+
 class Manage extends Component {
   constructor(props) {
     super(props)
@@ -77,7 +78,13 @@ class Manage extends Component {
       .catch(error => {
         console.log(error);
       })
-
+    updateProfile(a.currentUser, {
+      displayName: data.name, photoURL: ""
+    }).then(() => {
+      console.log("Profile updated");
+    }).catch((error) => {
+      console.log(error);
+    });  
   }
 
   // Method causes to store all the values of the 

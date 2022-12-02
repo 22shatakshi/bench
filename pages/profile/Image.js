@@ -2,7 +2,9 @@ import Avatar from "@mui/material/Avatar";
 import { useState } from "react";
 import { storage } from "../../config/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import {getAuth} from 'firebase/auth';
+import {getAuth, updateProfile} from 'firebase/auth';
+import { doc, updateDoc } from 'firebase/firestore';
+import { database } from '../../config/firebase'
 
 function Image() {
 
@@ -18,13 +20,23 @@ function Image() {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const imageRef = ref(storage, a.currentUser?.uid);
     uploadBytes(imageRef, image)
       .then(() => {
         getDownloadURL(imageRef)
-          .then((url) => {
+          .then(async (url) => {
             setUrl(url);
+            await updateDoc(doc(database, "userid", a.currentUser.uid), {
+              photoURL: url
+            }); 
+            updateProfile(a.currentUser, {
+              photoURL: url
+            }).then(() => {
+              console.log("Image uploaded", {url})
+            }).catch((error) => {
+              console.log(error);
+            });            
           })
           .catch((error) => {
             console.log(error.message, "error getting the image url");

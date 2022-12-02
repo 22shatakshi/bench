@@ -21,7 +21,7 @@ import { getAuth} from 'firebase/auth'
 import { useRouter } from 'next/router';
 import { getDownloadURL, getStorage, ref } from 'firebase/storage'
 import currentUserDataRequest from '../../data/currectUser';
-
+import Notification from '../notification/notification'
 const myProfile = () => {
     const router = useRouter()
     const auth = getAuth()
@@ -30,7 +30,7 @@ const myProfile = () => {
         email: '',
         username: '',
         name: '',
-        imagelink: '',
+        photoURL: '',
         timestamp: '',
         status: '',
         instagram: '',
@@ -44,20 +44,14 @@ const myProfile = () => {
         const getProfileData = async () => {
             const userData = await currentUserDataRequest();
             let lastSignInDate = user!.metadata.lastSignInTime
-            const storage = getStorage();
-            var imageLink
-            try {
-            imageLink = await getDownloadURL(ref(storage, String(user!.uid)))
-            } catch(e) {
-                imageLink = getDownloadURL(ref(storage, 'xsFnrxqQXcPYe9NpEQW0A6wpl5Z2'))
-            }
+
             setData({
                 username: userData.username,
                 email: userData.email,
                 name: userData.name,
                 status: userData.status,
                 timestamp: lastSignInDate!,
-                imagelink: imageLink,
+                photoURL: userData.photoURL,
                 instagram: userData.instagram,
                 twitter: userData.twitter,
                 facebook: userData.facebook,
@@ -79,7 +73,7 @@ const myProfile = () => {
                 <MDBCard className="mb-4">
                 <MDBCardBody className="text-center">
                     <MDBCardImage
-                    src={data.imagelink}
+                    src={data.photoURL}
                     alt="avatar"
                     className="rounded-circle"
                     style={{ width: '150px' }}
@@ -150,33 +144,10 @@ const myProfile = () => {
                 <MDBCol md="6">
                     <MDBCard className="mb-4 mb-md-0">
                     <MDBCardBody>
-                        <MDBCardText className="mb-4">My Sports</MDBCardText>
-                        <MDBCardText className="mb-1" style={{ fontSize: '.77rem' }}>Tennis</MDBCardText>
-                        <MDBProgress className="rounded">
-                        <MDBProgressBar width={80} valuemin={0} valuemax={100} />
-                        </MDBProgress>
-
-                        <MDBCardText className="mt-4 mb-1" style={{ fontSize: '.77rem' }}>Volleyball</MDBCardText>
-                        <MDBProgress className="rounded">
-                        <MDBProgressBar width={72} valuemin={0} valuemax={100} />
-                        </MDBProgress>
-
-                        <MDBCardText className="mt-4 mb-1" style={{ fontSize: '.77rem' }}>Badminton</MDBCardText>
-                        <MDBProgress className="rounded">
-                        <MDBProgressBar width={89} valuemin={0} valuemax={100} />
-                        </MDBProgress>
-
-                        <MDBCardText className="mt-4 mb-1" style={{ fontSize: '.77rem' }}>Football</MDBCardText>
-                        <MDBProgress className="rounded">
-                        <MDBProgressBar width={55} valuemin={0} valuemax={100} />
-                        </MDBProgress>
-
-                        <MDBCardText className="mt-4 mb-1" style={{ fontSize: '.77rem' }}>Basketball</MDBCardText>
-                        <MDBProgress className="rounded">
-                        <MDBProgressBar width={66} valuemin={0} valuemax={100} />
-                        </MDBProgress>
+                        <MDBCardText className="mb-4">Notification</MDBCardText>
+                        <Notification/>
                     </MDBCardBody>
-                    </MDBCard>
+                    </MDBCard> 
                 </MDBCol>
 
                 <MDBCol md="6">
