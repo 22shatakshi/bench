@@ -109,15 +109,17 @@ const Profile = ({ selected }) => {
                     photoURL: user.photoURL,
                 },
             }); 
+            alert(`Success! You have sent a chat request to the user ${targetData.get("username")}.\n`)
+        } else {
+            alert(`You already have access to chatting with them.\n`)
         }
     }
     
     useEffect(() => {
         const fetchBlockState = async () => {
-            const currentUserData = await currentUserDataRequest();
-            const blockedList = currentUserData.blocked;
-            for (var i = 0; i < blockedList.length; i++) {
-                if (data.get("uid") == blockedList[i]) {
+            const b = data.get("blocked");
+            for (var i = 0; i < b.length; i++) {
+                if (data.get("uid") == b[i]) {
                     setBlock(true);
                     break;
                 }
