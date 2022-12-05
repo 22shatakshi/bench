@@ -1,39 +1,36 @@
 import React, {useState, useEffect } from 'react';
 import {TextField , Button, List, Divider, FormControl, InputLabel, NativeSelect} from '@mui/material';
-import { collection , query, onSnapshot, addDoc, doc, deleteDoc, where} from 'firebase/firestore';
+import { collection , query, onSnapshot, addDoc, doc, deleteDoc, where, getDoc} from 'firebase/firestore';
 import { database } from '../../config/firebase';
-import { getAuth} from 'firebase/auth'
+import { useAuth } from '../../context/AuthContext'
 
 function Notification() {
+    const { user } = useAuth();
 
-    const auth = getAuth();
-    const q = query(collection(database,'notification'), where('uid', "==", auth.currentUser?.uid));
-    const [info,setInfo]=useState([]);
-    
+    var notificationDoc;
+    const [enable, setEnable] = useState(true);
+    const [email, setEmail] = useState("");
+
     useEffect(() => {
-            onSnapshot(q,(snapshot)=>{
-                setInfo(snapshot.docs.map(doc=>({
-                  id: auth.currentUser.uid,
-                  item: doc.data()
-                }
-                )))
-           })
-      },[]);
+        const fetchNotificationData = async () => {
+            const docSnap = await getDoc(doc(database, "notification", user.uid));
+            notificationDoc = docSnap;
+            const email = docSnap.data().email;
+            const enable = docSnap.data().enable;
+            setEnable(enable)
+            setEmail(email);
+        }
+        fetchNotificationData();
+      },[user?.uid]);
 
-      const [newEmail,setNewEmail]=useState();
-      const [enable,setEnable]=useState(true);
-
-      const setNotification = () => {
-        if (info[0] != null) deleteDoc(doc(database,'notification',info[0]?.id));
-        if (newEmail == null) {
+      const setNotification = async () => {
+        if (email == "" || email == null) {
             window.alert("Email field is empty!");
         } else {
-            if (enable == '') setEnable(true)
-            addDoc(collection(database,'notification'),{
-                email:newEmail,
-                enable:enable,
-                uid:auth.currentUser?.uid
-            });
+            await updateDoc(notificationDoc, {
+                email: email,
+                enable: enable,
+            }); 
             window.alert("New Email:" + newEmail + ", Enabled:" + enable );
         }
 
@@ -43,8 +40,8 @@ function Notification() {
         <div>
             <List component="nav" aria-label="mailbox folders">
                 
-                <TextField id="outlined-basic" label="Email" variant="outlined" style={{margin:"5px 1px"}} size="small" inputProps={{ maxLength: 50 }}
-                onChange={e=>setNewEmail(e.target.value)}  />
+                <TextField id="outlined-basic" label={email} variant="outlined" style={{margin:"5px 1px"}} size="small" inputProps={{ maxLength: 50 }}
+                onChange={e=>setEmail(e.target.value)} />
                 <Divider />
 
                 <FormControl halfWidth>
@@ -57,7 +54,7 @@ function Notification() {
 
             </List>
             <Divider />
-            <Button variant="contained" style={{margin:"5px 5px"}} color="primary" size="small" onClick={setNotification} >Set</Button>
+            <Button variant="contained" style={{margin:"5px 5px"}} color="primary" size="small" onClick={setNotification}>Set</Button>
         </div>
     );
   

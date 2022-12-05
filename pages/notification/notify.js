@@ -9,7 +9,7 @@ import { getAuth } from 'firebase/auth'
 const Notify = async ({receiver, content}) => {
     init("E6TUPDT05sKE4l7YI");
     const docSnap = await getDoc(doc(database, "notification", receiver));
-    const address = docSnap.data().address;
+    const email = docSnap.data().email;
     const enable = docSnap.data().enable;
     
 
@@ -23,7 +23,7 @@ const Notify = async ({receiver, content}) => {
     } else {
         emailjs.send("service_re81ih1","template_66vu3bi",{
             message: content + ". From " + getAuth().currentUser.email,
-            to_email: address,
+            to_email: email,
             from_email: "team23project@gmail.com",
             }).then((result) => {
                 console.log(result.text);
