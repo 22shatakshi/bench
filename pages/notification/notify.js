@@ -14,10 +14,10 @@ const Notify = async ({receiver, content}) => {
     
 
     console.log("enable: ", enable)
-    console.log("address: ", address)
+    console.log("address: ", email)
 
 
-    if (!enable || address == null) {
+    if (!enable || email == null) {
         console.log("Receiver disabled their notification.")
         //window.alert("Receiver disabled their notification.")
     } else {
