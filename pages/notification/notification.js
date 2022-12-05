@@ -1,20 +1,18 @@
 import React, {useState, useEffect } from 'react';
 import {TextField , Button, List, Divider, FormControl, InputLabel, NativeSelect} from '@mui/material';
-import { collection , query, onSnapshot, addDoc, doc, deleteDoc, where, getDoc} from 'firebase/firestore';
+import { doc, getDoc, updateDoc} from 'firebase/firestore';
 import { database } from '../../config/firebase';
 import { useAuth } from '../../context/AuthContext'
 
 function Notification() {
     const { user } = useAuth();
 
-    var notificationDoc;
     const [enable, setEnable] = useState(true);
     const [email, setEmail] = useState("");
 
     useEffect(() => {
         const fetchNotificationData = async () => {
             const docSnap = await getDoc(doc(database, "notification", user.uid));
-            notificationDoc = docSnap;
             const email = docSnap.data().email;
             const enable = docSnap.data().enable;
             setEnable(enable)
@@ -27,11 +25,11 @@ function Notification() {
         if (email == "" || email == null) {
             window.alert("Email field is empty!");
         } else {
-            await updateDoc(notificationDoc, {
+            await updateDoc(doc(database, "notification", user.uid), {
                 email: email,
                 enable: enable,
             }); 
-            window.alert("New Email:" + newEmail + ", Enabled:" + enable );
+            window.alert("New Email:" + email + ", Enabled:" + enable );
         }
 
       };
